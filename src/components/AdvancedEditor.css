@@ -257,6 +257,26 @@
   color: #EB7E7A;
 }
 
+.add-chord-header-btn {
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  color: #666;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.add-chord-header-btn:hover {
+  background-color: rgba(157, 217, 130, 0.2);
+  color: #9DD982;
+}
+
 /* Chords Grid */
 .chords-grid {
   display: flex;
@@ -364,24 +384,9 @@
   opacity: 1;
 }
 
+/* Botón de agregar acorde (ahora en el header) */
 .add-chord-btn {
-  width: 70px;
-  height: 80px;
-  background-color: transparent;
-  border: 2px dashed #57566A;
-  border-radius: 10px;
-  color: #57566A;
-  font-size: 24px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-}
-
-.add-chord-btn:hover {
-  border-color: #9DD982;
-  color: #9DD982;
+  display: none;
 }
 
 /* Chord Picker */
@@ -699,5 +704,84 @@
 
   .picker-chord-name {
     font-size: 16px;
+  }
+}
+
+
+/* Key Selector */
+.key-badge.clickable {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s;
+  border: 1px solid rgba(157, 217, 130, 0.3);
+}
+
+.key-badge.clickable:hover {
+  background-color: rgba(157, 217, 130, 0.3);
+  transform: scale(1.05);
+}
+
+.key-badge.clickable i {
+  font-size: 14px;
+}
+
+.key-selector-modal {
+  max-width: 500px;
+}
+
+.transpose-warning {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background-color: rgba(157, 217, 130, 0.1);
+  border: 1px solid rgba(157, 217, 130, 0.3);
+  border-radius: 10px;
+  color: #9DD982;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.transpose-warning i {
+  font-size: 18px;
+}
+
+.keys-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.key-option {
+  padding: 15px 10px;
+  background-color: #3A3A4A;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  color: white;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.key-option:hover {
+  background-color: #4A4A5A;
+  border-color: #9DD982;
+  transform: scale(1.05);
+}
+
+.key-option.current {
+  background-color: rgba(157, 217, 130, 0.2);
+  border-color: #9DD982;
+  color: #9DD982;
+}
+
+@media (max-width: 480px) {
+  .keys-grid {
+    grid-template-columns: repeat(4, 1fr);
   }
 }

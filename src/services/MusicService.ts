@@ -265,4 +265,30 @@ export class MusicService {
   static getAvailableKeys(): string[] {
     return Object.keys(this.scaleData);
   }
+
+  // Transponer acordes de una tonalidad a otra
+  static transposeChord(chordName: string, fromKey: string, toKey: string): string {
+    // Obtener las escalas de ambas tonalidades
+    const fromScales = this.loadScales(fromKey);
+    const toScales = this.loadScales(toKey);
+    
+    // Encontrar el acorde en la tonalidad original
+    const chordIndex = fromScales.findIndex(scale => scale.name === chordName);
+    
+    // Si no se encuentra, devolver el acorde original
+    if (chordIndex === -1) return chordName;
+    
+    // Devolver el acorde correspondiente en la nueva tonalidad
+    return toScales[chordIndex].name;
+  }
+
+  // Transponer una lista de acordes
+  static transposeChords(chordNames: string[], fromKey: string, toKey: string): string[] {
+    return chordNames.map(chord => this.transposeChord(chord, fromKey, toKey));
+  }
+
+  // Obtener todas las tonalidades disponibles
+  static getAllKeys(): string[] {
+    return Object.keys(this.scaleData);
+  }
 }

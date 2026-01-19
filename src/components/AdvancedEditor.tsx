@@ -26,10 +26,45 @@ const AdvancedEditor: React.FC = () => {
   const [draggedChord, setDraggedChord] = useState<{ sectionId: string; index: number } | null>(null);
   const [newSectionName, setNewSectionName] = useState('');
   const [selectedPreset, setSelectedPreset] = useState(SECTION_PRESETS[0]);
+  const [showKeySelector, setShowKeySelector] = useState(false);
 
   if (!currentSong) return null;
 
   const scales = MusicService.loadScales(currentSong.key);
+  const allKeys = MusicService.getAllKeys();
+
+  const handleTransposeKey = (newKey: string) => {
+    if (newKey === currentSong.key) {
+      setShowKeySelector(false);
+      return;
+    }
+
+    // Transponer todas las secciones
+    const transposedSections = currentSong.sections.map(section => ({
+      ...section,
+      chords: section.chords.map(chord => ({
+        ...chord,
+        name: MusicService.transposeChord(chord.name, currentSong.key, newKey)
+      }))
+    }));
+
+    // Actualizar la canción con la nueva tonalidad y acordes transpuestos
+    const updatedSong = {
+      ...currentSong,
+      key: newKey,
+      sections: transposedSections
+    };
+
+    // Guardar cambios
+    const allSongs = JSON.parse(localStorage.getItem('advancedSongs') || '[]');
+    const updatedSongs = allSongs.map((s: any) => 
+      s.id === currentSong.id ? updatedSong : s
+    );
+    localStorage.setItem('advancedSongs', JSON.stringify(updatedSongs));
+
+    // Actualizar el estado
+    window.location.reload(); // Recargar para aplicar cambios
+  };
 
   const handleAddSection = () => {
     const name = newSectionName.trim() || selectedPreset.name;
@@ -94,7 +129,14 @@ const AdvancedEditor: React.FC = () => {
         <div className="song-info">
           <h1>{currentSong.name}</h1>
           <div className="song-meta">
-            <span className="key-badge">{currentSong.key}</span>
+            <button 
+              className="key-badge clickable"
+              onClick={() => setShowKeySelector(!showKeySelector)}
+              title="Cambiar tonalidad"
+            >
+              {currentSong.key}
+              <i className="ri-arrow-down-s-line"></i>
+            </button>
             <span className="bpm-badge">{currentSong.bpm} BPM</span>
           </div>
         </div>
@@ -156,8 +198,16 @@ const AdvancedEditor: React.FC = () => {
                     </button>
                   </div>
                   <button 
+                    className="add-chord-header-btn"
+                    onClick={() => setShowChordPicker(section.id)}
+                    title="Agregar acorde"
+                  >
+                    <i className="ri-music-2-line"></i>
+                  </button>
+                  <button 
                     className="delete-section-btn"
                     onClick={() => deleteSection(section.id)}
+                    title="Eliminar sección"
                   >
                     <i className="ri-delete-bin-line"></i>
                   </button>
@@ -204,14 +254,6 @@ const AdvancedEditor: React.FC = () => {
                     </button>
                   </div>
                 ))}
-
-                {/* Add Chord Button */}
-                <button 
-                  className="add-chord-btn"
-                  onClick={() => setShowChordPicker(section.id)}
-                >
-                  <i className="ri-add-line"></i>
-                </button>
               </div>
 
               {/* Chord Picker */}
@@ -298,6 +340,37 @@ const AdvancedEditor: React.FC = () => {
               </button>
               <button className="btn-create" onClick={handleAddSection}>
                 Agregar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Key Selector Modal */}
+      {showKeySelector && (
+        <div className="modal-backdrop" onClick={() => setShowKeySelector(false)}>
+          <div className="modal-content key-selector-modal" onClick={e => e.stopPropagation()}>
+            <h2>Cambiar Tonalidad</h2>
+            <p className="transpose-warning">
+              <i className="ri-information-line"></i>
+              Todos los acordes se transpondrán automáticamente
+            </p>
+            
+            <div className="keys-grid">
+              {allKeys.map(key => (
+                <button
+                  key={key}
+                  className={`key-option ${key === currentSong.key ? 'current' : ''}`}
+                  onClick={() => handleTransposeKey(key)}
+                >
+                  {key}
+                </button>
+              ))}
+            </div>
+
+            <div className="modal-actions">
+              <button className="btn-cancel" onClick={() => setShowKeySelector(false)}>
+                Cancelar
               </button>
             </div>
           </div>
