@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAdvancedSong } from '../context/AdvancedSongContext';
-import { SECTION_PRESETS } from '../models/AdvancedSong';
 import AdvancedEditor from '../components/AdvancedEditor';
 import './AdvancedPage.css';
 
 const AdvancedPage: React.FC = () => {
-  const navigate = useNavigate();
   const { advancedSongs, currentSong, createSong, loadSong, deleteSong } = useAdvancedSong();
   const [showNewSongModal, setShowNewSongModal] = useState(false);
   const [newSongName, setNewSongName] = useState('');

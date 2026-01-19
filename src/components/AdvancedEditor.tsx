@@ -1,14 +1,13 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useAdvancedSong } from '../context/AdvancedSongContext';
 import { MusicService } from '../services/MusicService';
-import { SECTION_PRESETS, ChordItem, SongSection } from '../models/AdvancedSong';
+import { SECTION_PRESETS, SongSection } from '../models/AdvancedSong';
 import './AdvancedEditor.css';
 
 const AdvancedEditor: React.FC = () => {
   const {
     currentSong,
     closeSong,
-    updateSong,
     addSection,
     updateSection,
     deleteSection,
@@ -19,14 +18,11 @@ const AdvancedEditor: React.FC = () => {
     isPlaying,
     play,
     pause,
-    stop,
-    currentSectionIndex,
-    currentChordIndex
+    stop
   } = useAdvancedSong();
 
   const [showSectionModal, setShowSectionModal] = useState(false);
   const [showChordPicker, setShowChordPicker] = useState<string | null>(null);
-  const [editingChord, setEditingChord] = useState<{ sectionId: string; chordId: string } | null>(null);
   const [draggedChord, setDraggedChord] = useState<{ sectionId: string; index: number } | null>(null);
   const [newSectionName, setNewSectionName] = useState('');
   const [selectedPreset, setSelectedPreset] = useState(SECTION_PRESETS[0]);
