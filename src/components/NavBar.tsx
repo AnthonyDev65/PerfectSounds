@@ -67,13 +67,13 @@ const NavBar: React.FC = () => {
         <span>Canciones</span>
       </button>
 
-      <button 
+      {/* <button 
         className="nav-item"
         onClick={handleFullscreen}
       >
         <i className="ri-fullscreen-line"></i>
         <span>Pantalla</span>
-      </button>
+      </button> */}
     </nav>
   );
 };

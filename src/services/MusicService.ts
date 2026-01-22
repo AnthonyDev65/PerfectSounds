@@ -14,13 +14,13 @@ export class MusicService {
       { name: 'Bdim', degrees: 'VII', degreesColor: '#EB7E7A', isSelected: false }
     ],
     'C#': [
-      { name: 'C#', degrees: 'I', degreesColor: '#9DD982', isSelected: false },
-      { name: 'D#m', degrees: 'II', degreesColor: '#B579D3', isSelected: false },
-      { name: 'Fm', degrees: 'III', degreesColor: '#B579D3', isSelected: false },
-      { name: 'F#', degrees: 'IV', degreesColor: '#9DD982', isSelected: false },
-      { name: 'G#', degrees: 'V', degreesColor: '#9DD982', isSelected: false },
-      { name: 'A#m', degrees: 'VI', degreesColor: '#B579D3', isSelected: false },
-      { name: 'Cdim', degrees: 'VII', degreesColor: '#EB7E7A', isSelected: false }
+      { name: 'C#',    degrees: 'I',   degreesColor: '#9DD982', isSelected: false },
+      { name: 'D#m',   degrees: 'II',  degreesColor: '#B579D3', isSelected: false },
+      { name: 'E#m',   degrees: 'III', degreesColor: '#B579D3', isSelected: false },
+      { name: 'F#',    degrees: 'IV',  degreesColor: '#9DD982', isSelected: false },
+      { name: 'G#',    degrees: 'V',   degreesColor: '#9DD982', isSelected: false },
+      { name: 'A#m',   degrees: 'VI',  degreesColor: '#B579D3', isSelected: false },
+      { name: 'B#dim', degrees: 'VII', degreesColor: '#EB7E7A', isSelected: false }
     ],
     'D': [
       { name: 'D', degrees: 'I', degreesColor: '#9DD982', isSelected: false },
@@ -32,13 +32,13 @@ export class MusicService {
       { name: 'C#dim', degrees: 'VII', degreesColor: '#EB7E7A', isSelected: false }
     ],
     'D#': [
-      { name: 'D#', degrees: 'I', degreesColor: '#9DD982', isSelected: false },
-      { name: 'Fm', degrees: 'II', degreesColor: '#B579D3', isSelected: false },
-      { name: 'Gm', degrees: 'III', degreesColor: '#B579D3', isSelected: false },
-      { name: 'G#', degrees: 'IV', degreesColor: '#9DD982', isSelected: false },
-      { name: 'A#', degrees: 'V', degreesColor: '#9DD982', isSelected: false },
-      { name: 'Cm', degrees: 'VI', degreesColor: '#B579D3', isSelected: false },
-      { name: 'Ddim', degrees: 'VII', degreesColor: '#EB7E7A', isSelected: false }
+      { name: 'D#',    degrees: 'I',   degreesColor: '#9DD982', isSelected: false },
+      { name: 'E#m',   degrees: 'II',  degreesColor: '#B579D3', isSelected: false },
+      { name: 'F##m',  degrees: 'III', degreesColor: '#B579D3', isSelected: false },
+      { name: 'G#',    degrees: 'IV',  degreesColor: '#9DD982', isSelected: false },
+      { name: 'A#',    degrees: 'V',   degreesColor: '#9DD982', isSelected: false },
+      { name: 'B#m',   degrees: 'VI',  degreesColor: '#B579D3', isSelected: false },
+      { name: 'C##dim',degrees: 'VII', degreesColor: '#EB7E7A', isSelected: false }
     ],
     'E': [
       { name: 'E', degrees: 'I', degreesColor: '#9DD982', isSelected: false },
@@ -59,13 +59,13 @@ export class MusicService {
       { name: 'Edim', degrees: 'VII', degreesColor: '#EB7E7A', isSelected: false }
     ],
     'F#': [
-      { name: 'F#', degrees: 'I', degreesColor: '#9DD982', isSelected: false },
-      { name: 'G#m', degrees: 'II', degreesColor: '#B579D3', isSelected: false },
-      { name: 'A#m', degrees: 'III', degreesColor: '#B579D3', isSelected: false },
-      { name: 'B', degrees: 'IV', degreesColor: '#9DD982', isSelected: false },
-      { name: 'C#', degrees: 'V', degreesColor: '#9DD982', isSelected: false },
-      { name: 'D#m', degrees: 'VI', degreesColor: '#B579D3', isSelected: false },
-      { name: 'Fdim', degrees: 'VII', degreesColor: '#EB7E7A', isSelected: false }
+      { name: 'F#',    degrees: 'I',   degreesColor: '#9DD982', isSelected: false },
+      { name: 'G#m',   degrees: 'II',  degreesColor: '#B579D3', isSelected: false },
+      { name: 'A#m',   degrees: 'III', degreesColor: '#B579D3', isSelected: false },
+      { name: 'B',     degrees: 'IV',  degreesColor: '#9DD982', isSelected: false },
+      { name: 'C#',    degrees: 'V',   degreesColor: '#9DD982', isSelected: false },
+      { name: 'D#m',   degrees: 'VI',  degreesColor: '#B579D3', isSelected: false },
+      { name: 'E#dim', degrees: 'VII', degreesColor: '#EB7E7A', isSelected: false }
     ],
     'G': [
       { name: 'G', degrees: 'I', degreesColor: '#9DD982', isSelected: false },
@@ -77,13 +77,13 @@ export class MusicService {
       { name: 'F#dim', degrees: 'VII', degreesColor: '#EB7E7A', isSelected: false }
     ],
     'G#': [
-      { name: 'G#', degrees: 'I', degreesColor: '#9DD982', isSelected: false },
-      { name: 'A#m', degrees: 'II', degreesColor: '#B579D3', isSelected: false },
-      { name: 'Cm', degrees: 'III', degreesColor: '#B579D3', isSelected: false },
-      { name: 'C#', degrees: 'IV', degreesColor: '#9DD982', isSelected: false },
-      { name: 'D#', degrees: 'V', degreesColor: '#9DD982', isSelected: false },
-      { name: 'Fm', degrees: 'VI', degreesColor: '#B579D3', isSelected: false },
-      { name: 'Gdim', degrees: 'VII', degreesColor: '#EB7E7A', isSelected: false }
+      { name: 'G#',    degrees: 'I',   degreesColor: '#9DD982', isSelected: false },
+      { name: 'A#m',   degrees: 'II',  degreesColor: '#B579D3', isSelected: false },
+      { name: 'B#m',   degrees: 'III', degreesColor: '#B579D3', isSelected: false },
+      { name: 'C#',    degrees: 'IV',  degreesColor: '#9DD982', isSelected: false },
+      { name: 'D#',    degrees: 'V',   degreesColor: '#9DD982', isSelected: false },
+      { name: 'E#m',   degrees: 'VI',  degreesColor: '#B579D3', isSelected: false },
+      { name: 'F##dim',degrees: 'VII', degreesColor: '#EB7E7A', isSelected: false }
     ],
     'A': [
       { name: 'A', degrees: 'I', degreesColor: '#9DD982', isSelected: false },
@@ -95,13 +95,13 @@ export class MusicService {
       { name: 'G#dim', degrees: 'VII', degreesColor: '#EB7E7A', isSelected: false }
     ],
     'A#': [
-      { name: 'A#', degrees: 'I', degreesColor: '#9DD982', isSelected: false },
-      { name: 'Cm', degrees: 'II', degreesColor: '#B579D3', isSelected: false },
-      { name: 'Dm', degrees: 'III', degreesColor: '#B579D3', isSelected: false },
-      { name: 'D#', degrees: 'IV', degreesColor: '#9DD982', isSelected: false },
-      { name: 'F', degrees: 'V', degreesColor: '#9DD982', isSelected: false },
-      { name: 'Gm', degrees: 'VI', degreesColor: '#B579D3', isSelected: false },
-      { name: 'Adim', degrees: 'VII', degreesColor: '#EB7E7A', isSelected: false }
+      { name: 'A#',    degrees: 'I',   degreesColor: '#9DD982', isSelected: false },
+      { name: 'B#m',   degrees: 'II',  degreesColor: '#B579D3', isSelected: false },
+      { name: 'C##m',  degrees: 'III', degreesColor: '#B579D3', isSelected: false },
+      { name: 'D#',    degrees: 'IV',  degreesColor: '#9DD982', isSelected: false },
+      { name: 'E#',    degrees: 'V',   degreesColor: '#9DD982', isSelected: false },
+      { name: 'F##m',  degrees: 'VI',  degreesColor: '#B579D3', isSelected: false },
+      { name: 'G##dim',degrees: 'VII', degreesColor: '#EB7E7A', isSelected: false }
     ],
     'B': [
       { name: 'B', degrees: 'I', degreesColor: '#9DD982', isSelected: false },
@@ -124,13 +124,13 @@ export class MusicService {
       { name: 'Bb', degrees: 'VII', degreesColor: '#9DD982', isSelected: false }
     ],
     'C#m': [
-      { name: 'C#m', degrees: 'I', degreesColor: '#B579D3', isSelected: false },
-      { name: 'D#dim', degrees: 'II', degreesColor: '#EB7E7A', isSelected: false },
-      { name: 'E', degrees: 'III', degreesColor: '#9DD982', isSelected: false },
-      { name: 'F#m', degrees: 'IV', degreesColor: '#B579D3', isSelected: false },
-      { name: 'G#m', degrees: 'V', degreesColor: '#B579D3', isSelected: false },
-      { name: 'A', degrees: 'VI', degreesColor: '#9DD982', isSelected: false },
-      { name: 'B', degrees: 'VII', degreesColor: '#9DD982', isSelected: false }
+      { name: 'C#m', degrees: 'I',   degreesColor: '#B579D3', isSelected: false },
+      { name: 'D#dim',degrees:'II',  degreesColor: '#EB7E7A', isSelected: false },
+      { name: 'E',   degrees: 'III', degreesColor: '#9DD982', isSelected: false },
+      { name: 'F#m', degrees: 'IV',  degreesColor: '#B579D3', isSelected: false },
+      { name: 'G#m', degrees: 'V',   degreesColor: '#B579D3', isSelected: false },
+      { name: 'A',   degrees: 'VI',  degreesColor: '#9DD982', isSelected: false },
+      { name: 'B',   degrees: 'VII', degreesColor: '#9DD982', isSelected: false }
     ],
     'Dm': [
       { name: 'Dm', degrees: 'I', degreesColor: '#B579D3', isSelected: false },
@@ -141,14 +141,23 @@ export class MusicService {
       { name: 'Bb', degrees: 'VI', degreesColor: '#9DD982', isSelected: false },
       { name: 'C', degrees: 'VII', degreesColor: '#9DD982', isSelected: false }
     ],
+    'D#m': [
+      { name: 'D#m',  degrees: 'I',   degreesColor: '#B579D3', isSelected: false },
+      { name: 'E#dim',degrees: 'II',  degreesColor: '#EB7E7A', isSelected: false },
+      { name: 'F#',   degrees: 'III', degreesColor: '#9DD982', isSelected: false },
+      { name: 'G#m',  degrees: 'IV',  degreesColor: '#B579D3', isSelected: false },
+      { name: 'A#m',  degrees: 'V',   degreesColor: '#B579D3', isSelected: false },
+      { name: 'B',    degrees: 'VI',  degreesColor: '#9DD982', isSelected: false },
+      { name: 'C#',   degrees: 'VII', degreesColor: '#9DD982', isSelected: false }
+    ],
     'Ebm': [
-      { name: 'Ebm', degrees: 'I', degreesColor: '#B579D3', isSelected: false },
-      { name: 'Fdim', degrees: 'II', degreesColor: '#EB7E7A', isSelected: false },
-      { name: 'Gb', degrees: 'III', degreesColor: '#9DD982', isSelected: false },
-      { name: 'Abm', degrees: 'IV', degreesColor: '#B579D3', isSelected: false },
-      { name: 'Bbm', degrees: 'V', degreesColor: '#B579D3', isSelected: false },
-      { name: 'B', degrees: 'VI', degreesColor: '#9DD982', isSelected: false },
-      { name: 'Db', degrees: 'VII', degreesColor: '#9DD982', isSelected: false }
+      { name: 'Ebm',  degrees: 'I',   degreesColor: '#B579D3', isSelected: false },
+      { name: 'Fdim', degrees: 'II',  degreesColor: '#EB7E7A', isSelected: false },
+      { name: 'Gb',   degrees: 'III', degreesColor: '#9DD982', isSelected: false },
+      { name: 'Abm',  degrees: 'IV',  degreesColor: '#B579D3', isSelected: false },
+      { name: 'Bbm',  degrees: 'V',   degreesColor: '#B579D3', isSelected: false },
+      { name: 'Cb',   degrees: 'VI',  degreesColor: '#9DD982', isSelected: false },
+      { name: 'Db',   degrees: 'VII', degreesColor: '#9DD982', isSelected: false }
     ],
     'Em': [
       { name: 'Em', degrees: 'I', degreesColor: '#B579D3', isSelected: false },
@@ -169,13 +178,13 @@ export class MusicService {
       { name: 'Eb', degrees: 'VII', degreesColor: '#9DD982', isSelected: false }
     ],
     'F#m': [
-      { name: 'F#m', degrees: 'I', degreesColor: '#B579D3', isSelected: false },
-      { name: 'G#dim', degrees: 'II', degreesColor: '#EB7E7A', isSelected: false },
-      { name: 'A', degrees: 'III', degreesColor: '#9DD982', isSelected: false },
-      { name: 'Bm', degrees: 'IV', degreesColor: '#B579D3', isSelected: false },
-      { name: 'C#m', degrees: 'V', degreesColor: '#B579D3', isSelected: false },
-      { name: 'D', degrees: 'VI', degreesColor: '#9DD982', isSelected: false },
-      { name: 'E', degrees: 'VII', degreesColor: '#9DD982', isSelected: false }
+      { name: 'F#m',  degrees: 'I',   degreesColor: '#B579D3', isSelected: false },
+      { name: 'G#dim',degrees: 'II',  degreesColor: '#EB7E7A', isSelected: false },
+      { name: 'A',    degrees: 'III', degreesColor: '#9DD982', isSelected: false },
+      { name: 'Bm',   degrees: 'IV',  degreesColor: '#B579D3', isSelected: false },
+      { name: 'C#m',  degrees: 'V',   degreesColor: '#B579D3', isSelected: false },
+      { name: 'D',    degrees: 'VI',  degreesColor: '#9DD982', isSelected: false },
+      { name: 'E',    degrees: 'VII', degreesColor: '#9DD982', isSelected: false }
     ],
     'Gm': [
       { name: 'Gm', degrees: 'I', degreesColor: '#B579D3', isSelected: false },
@@ -187,13 +196,22 @@ export class MusicService {
       { name: 'F', degrees: 'VII', degreesColor: '#9DD982', isSelected: false }
     ],
     'G#m': [
-      { name: 'G#m', degrees: 'I', degreesColor: '#B579D3', isSelected: false },
-      { name: 'A#dim', degrees: 'II', degreesColor: '#EB7E7A', isSelected: false },
-      { name: 'B', degrees: 'III', degreesColor: '#9DD982', isSelected: false },
-      { name: 'C#m', degrees: 'IV', degreesColor: '#B579D3', isSelected: false },
-      { name: 'D#m', degrees: 'V', degreesColor: '#B579D3', isSelected: false },
-      { name: 'E', degrees: 'VI', degreesColor: '#9DD982', isSelected: false },
-      { name: 'F#', degrees: 'VII', degreesColor: '#9DD982', isSelected: false }
+      { name: 'G#m',  degrees: 'I',   degreesColor: '#B579D3', isSelected: false },
+      { name: 'A#dim',degrees: 'II',  degreesColor: '#EB7E7A', isSelected: false },
+      { name: 'B',    degrees: 'III', degreesColor: '#9DD982', isSelected: false },
+      { name: 'C#m',  degrees: 'IV',  degreesColor: '#B579D3', isSelected: false },
+      { name: 'D#m',  degrees: 'V',   degreesColor: '#B579D3', isSelected: false },
+      { name: 'E',    degrees: 'VI',  degreesColor: '#9DD982', isSelected: false },
+      { name: 'F#',   degrees: 'VII', degreesColor: '#9DD982', isSelected: false }
+    ],
+    'Abm': [
+      { name: 'Abm',  degrees: 'I',   degreesColor: '#B579D3', isSelected: false },
+      { name: 'Bbdim',degrees: 'II',  degreesColor: '#EB7E7A', isSelected: false },
+      { name: 'Cb',   degrees: 'III', degreesColor: '#9DD982', isSelected: false },
+      { name: 'Dbm',  degrees: 'IV',  degreesColor: '#B579D3', isSelected: false },
+      { name: 'Ebm',  degrees: 'V',   degreesColor: '#B579D3', isSelected: false },
+      { name: 'Fb',   degrees: 'VI',  degreesColor: '#9DD982', isSelected: false },
+      { name: 'Gb',   degrees: 'VII', degreesColor: '#9DD982', isSelected: false }
     ],
     'Am': [
       { name: 'Am', degrees: 'I', degreesColor: '#B579D3', isSelected: false },
@@ -204,14 +222,23 @@ export class MusicService {
       { name: 'F', degrees: 'VI', degreesColor: '#9DD982', isSelected: false },
       { name: 'G', degrees: 'VII', degreesColor: '#9DD982', isSelected: false }
     ],
+    'A#m': [
+      { name: 'A#m',  degrees: 'I',   degreesColor: '#B579D3', isSelected: false },
+      { name: 'B#dim',degrees: 'II',  degreesColor: '#EB7E7A', isSelected: false },
+      { name: 'C#',   degrees: 'III', degreesColor: '#9DD982', isSelected: false },
+      { name: 'D#m',  degrees: 'IV',  degreesColor: '#B579D3', isSelected: false },
+      { name: 'E#m',  degrees: 'V',   degreesColor: '#B579D3', isSelected: false },
+      { name: 'F#',   degrees: 'VI',  degreesColor: '#9DD982', isSelected: false },
+      { name: 'G#',   degrees: 'VII', degreesColor: '#9DD982', isSelected: false }
+    ],
     'Bbm': [
-      { name: 'Bbm', degrees: 'I', degreesColor: '#B579D3', isSelected: false },
-      { name: 'Cdim', degrees: 'II', degreesColor: '#EB7E7A', isSelected: false },
-      { name: 'Db', degrees: 'III', degreesColor: '#9DD982', isSelected: false },
-      { name: 'Ebm', degrees: 'IV', degreesColor: '#B579D3', isSelected: false },
-      { name: 'Fm', degrees: 'V', degreesColor: '#B579D3', isSelected: false },
-      { name: 'Gb', degrees: 'VI', degreesColor: '#9DD982', isSelected: false },
-      { name: 'Ab', degrees: 'VII', degreesColor: '#9DD982', isSelected: false }
+      { name: 'Bbm',  degrees: 'I',   degreesColor: '#B579D3', isSelected: false },
+      { name: 'Cdim', degrees: 'II',  degreesColor: '#EB7E7A', isSelected: false },
+      { name: 'Db',   degrees: 'III', degreesColor: '#9DD982', isSelected: false },
+      { name: 'Ebm',  degrees: 'IV',  degreesColor: '#B579D3', isSelected: false },
+      { name: 'Fm',   degrees: 'V',   degreesColor: '#B579D3', isSelected: false },
+      { name: 'Gb',   degrees: 'VI',  degreesColor: '#9DD982', isSelected: false },
+      { name: 'Ab',   degrees: 'VII', degreesColor: '#9DD982', isSelected: false }
     ],
     'Bm': [
       { name: 'Bm', degrees: 'I', degreesColor: '#B579D3', isSelected: false },
