@@ -19,6 +19,13 @@
 .env.test.local
 .env.production.local
 
+# Sensitive files
+VERCEL_ENV_VARS.txt
+test-supabase.js
+fix-profiles.js
+*_KEYS.txt
+*_CREDENTIALS.txt
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
