@@ -1,10 +1,15 @@
-import { supabase } from '../lib/supabaseClient';
+import { supabase, isSupabaseEnabled } from '../lib/supabaseClient';
 import { AdvancedSong } from '../models/AdvancedSong';
 
 export class CloudSyncService {
   // ========== Simple Songs ==========
   
   static async syncSimpleSongs(userId: string, localSongs: any[]) {
+    if (!isSupabaseEnabled || !supabase) {
+      console.log('Supabase not configured, using local storage only');
+      return localSongs;
+    }
+
     try {
       // Get cloud songs
       const { data: cloudSongs, error } = await supabase
@@ -33,6 +38,10 @@ export class CloudSyncService {
   }
 
   static async saveSimpleSong(userId: string, song: any) {
+    if (!isSupabaseEnabled || !supabase) {
+      return { success: true };
+    }
+
     try {
       const { error } = await supabase
         .from('songs')
@@ -55,6 +64,10 @@ export class CloudSyncService {
   }
 
   static async deleteSimpleSong(userId: string, songId: string) {
+    if (!isSupabaseEnabled || !supabase) {
+      return { success: true };
+    }
+
     try {
       const { error } = await supabase
         .from('songs')
@@ -73,6 +86,11 @@ export class CloudSyncService {
   // ========== Advanced Songs ==========
   
   static async syncAdvancedSongs(userId: string, localSongs: AdvancedSong[]) {
+    if (!isSupabaseEnabled || !supabase) {
+      console.log('Supabase not configured, using local storage only');
+      return localSongs;
+    }
+
     try {
       const { data: cloudSongs, error } = await supabase
         .from('advanced_songs')
@@ -121,6 +139,10 @@ export class CloudSyncService {
   }
 
   static async saveAdvancedSong(userId: string, song: AdvancedSong) {
+    if (!isSupabaseEnabled || !supabase) {
+      return { success: true };
+    }
+
     try {
       const { error } = await supabase
         .from('advanced_songs')
@@ -143,6 +165,10 @@ export class CloudSyncService {
   }
 
   static async deleteAdvancedSong(userId: string, songId: string) {
+    if (!isSupabaseEnabled || !supabase) {
+      return { success: true };
+    }
+
     try {
       const { error } = await supabase
         .from('advanced_songs')
@@ -161,6 +187,11 @@ export class CloudSyncService {
   // ========== Favorites ==========
   
   static async syncFavorites(userId: string, localFavorites: string[]) {
+    if (!isSupabaseEnabled || !supabase) {
+      console.log('Supabase not configured, using local storage only');
+      return localFavorites;
+    }
+
     try {
       const { data, error } = await supabase
         .from('favorites')
@@ -180,6 +211,10 @@ export class CloudSyncService {
   }
 
   static async saveFavorite(userId: string, note: string) {
+    if (!isSupabaseEnabled || !supabase) {
+      return { success: true };
+    }
+
     try {
       const { error } = await supabase
         .from('favorites')
@@ -197,6 +232,10 @@ export class CloudSyncService {
   }
 
   static async deleteFavorite(userId: string, note: string) {
+    if (!isSupabaseEnabled || !supabase) {
+      return { success: true };
+    }
+
     try {
       const { error } = await supabase
         .from('favorites')

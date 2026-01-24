@@ -1,0 +1,6 @@
+# Variables de Entorno para Vercel
+# Copia estos valores exactamente como están
+
+REACT_APP_SUPABASE_URL=https://xymkqhnspyrkntpxgtkx.supabase.co
+
+REACT_APP_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5bWtxaG5zcHlya250cHhndGt4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkyMTQ1OTAsImV4cCI6MjA4NDc5MDU5MH0.nMszz5SXiijydnzBSu_hQhC8svtkyWAsbEmdPg2zhes

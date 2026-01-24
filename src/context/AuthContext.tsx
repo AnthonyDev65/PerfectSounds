@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { supabase } from '../lib/supabaseClient';
+import { supabase, isSupabaseEnabled } from '../lib/supabaseClient';
 import { User, Session } from '@supabase/supabase-js';
 
 interface AuthContextState {
@@ -28,6 +28,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Si Supabase no está habilitado, no hacer nada
+    if (!isSupabaseEnabled || !supabase) {
+      setLoading(false);
+      return;
+    }
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -46,6 +52,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, []);
 
   const signUp = async (email: string, password: string, fullName?: string) => {
+    if (!isSupabaseEnabled || !supabase) {
+      return { error: { message: 'Supabase no está configurado' } };
+    }
+
     try {
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -83,6 +93,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const signIn = async (email: string, password: string) => {
+    if (!isSupabaseEnabled || !supabase) {
+      return { error: { message: 'Supabase no está configurado' } };
+    }
+
     try {
       const { error } = await supabase.auth.signInWithPassword({
         email,
@@ -95,10 +109,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const signOut = async () => {
+    if (!isSupabaseEnabled || !supabase) return;
     await supabase.auth.signOut();
   };
 
   const resetPassword = async (email: string) => {
+    if (!isSupabaseEnabled || !supabase) {
+      return { error: { message: 'Supabase no está configurado' } };
+    }
+
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/reset-password`
