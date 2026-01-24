@@ -35,7 +35,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
         if (error) {
           setError(error.message || 'Error al crear cuenta');
         } else {
-          setMessage('¡Cuenta creada! Revisa tu email para confirmar.');
+          setMessage('¡Cuenta creada exitosamente! Si la confirmación de email está habilitada, revisa tu bandeja de entrada (y spam) para confirmar tu cuenta.');
+          // Limpiar el formulario
+          setEmail('');
+          setPassword('');
+          setFullName('');
         }
       } else if (mode === 'reset') {
         const { error } = await resetPassword(email);

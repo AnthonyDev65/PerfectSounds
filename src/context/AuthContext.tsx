@@ -63,11 +63,22 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         options: {
           data: {
             full_name: fullName
-          }
+          },
+          emailRedirectTo: `${window.location.origin}`
         }
       });
 
-      if (error) return { error };
+      if (error) {
+        console.error('Signup error:', error);
+        return { error };
+      }
+
+      // Log para debugging
+      console.log('Signup successful:', {
+        user: data.user?.id,
+        email: data.user?.email,
+        confirmed: data.user?.email_confirmed_at
+      });
 
       // Create profile - Esperar a que el usuario esté disponible
       if (data.user) {
@@ -82,6 +93,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
         if (profileError) {
           console.error('Error creating profile:', profileError);
+          // No retornar error aquí, el perfil se puede crear después
         }
       }
 
