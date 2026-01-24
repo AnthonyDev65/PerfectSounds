@@ -7,8 +7,8 @@ interface AuthModalProps {
 }
 
 const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
-  const { signIn, signUp, resetPassword } = useAuth();
-  const [mode, setMode] = useState<'signin' | 'signup' | 'reset'>('signin');
+  const { signIn, signUp, resetPassword, resendConfirmation } = useAuth();
+  const [mode, setMode] = useState<'signin' | 'signup' | 'reset' | 'resend'>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
@@ -48,6 +48,13 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
         } else {
           setMessage('Email enviado. Revisa tu bandeja de entrada.');
         }
+      } else if (mode === 'resend') {
+        const { error } = await resendConfirmation(email);
+        if (error) {
+          setError(error.message || 'Error al reenviar confirmación');
+        } else {
+          setMessage('Email de confirmación reenviado. Revisa tu bandeja de entrada (y spam).');
+        }
       }
     } catch (err: any) {
       setError(err.message || 'Error inesperado');
@@ -68,6 +75,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
             {mode === 'signin' && 'Iniciar Sesión'}
             {mode === 'signup' && 'Crear Cuenta'}
             {mode === 'reset' && 'Recuperar Contraseña'}
+            {mode === 'resend' && 'Reenviar Confirmación'}
           </h2>
           <p>Guarda tus canciones en la nube</p>
         </div>
@@ -96,7 +104,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
             />
           </div>
 
-          {mode !== 'reset' && (
+          {mode !== 'reset' && mode !== 'resend' && (
             <div className="form-field">
               <label>Contraseña</label>
               <input
@@ -121,6 +129,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
                 {mode === 'signin' && 'Iniciar Sesión'}
                 {mode === 'signup' && 'Crear Cuenta'}
                 {mode === 'reset' && 'Enviar Email'}
+                {mode === 'resend' && 'Reenviar Confirmación'}
               </>
             )}
           </button>
@@ -131,6 +140,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
             <>
               <button onClick={() => setMode('reset')} className="auth-link">
                 ¿Olvidaste tu contraseña?
+              </button>
+              <button onClick={() => setMode('resend')} className="auth-link">
+                ¿No recibiste el email de confirmación?
               </button>
               <button onClick={() => setMode('signup')} className="auth-link">
                 ¿No tienes cuenta? <strong>Regístrate</strong>
@@ -143,6 +155,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
             </button>
           )}
           {mode === 'reset' && (
+            <button onClick={() => setMode('signin')} className="auth-link">
+              Volver a <strong>Iniciar sesión</strong>
+            </button>
+          )}
+          {mode === 'resend' && (
             <button onClick={() => setMode('signin')} className="auth-link">
               Volver a <strong>Iniciar sesión</strong>
             </button>

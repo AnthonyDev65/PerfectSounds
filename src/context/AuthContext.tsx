@@ -10,6 +10,7 @@ interface AuthContextState {
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error: any }>;
+  resendConfirmation: (email: string) => Promise<{ error: any }>;
 }
 
 const AuthContext = createContext<AuthContextState | undefined>(undefined);
@@ -140,6 +141,25 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  const resendConfirmation = async (email: string) => {
+    if (!isSupabaseEnabled || !supabase) {
+      return { error: { message: 'Supabase no está configurado' } };
+    }
+
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: email,
+        options: {
+          emailRedirectTo: `${window.location.origin}`
+        }
+      });
+      return { error };
+    } catch (error) {
+      return { error };
+    }
+  };
+
   const value: AuthContextState = {
     user,
     session,
@@ -147,7 +167,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     signUp,
     signIn,
     signOut,
-    resetPassword
+    resetPassword,
+    resendConfirmation
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
