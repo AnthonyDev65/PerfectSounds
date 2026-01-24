@@ -13,10 +13,25 @@
   z-index: 100;
 }
 
+.nav-spacer {
+  display: none;
+}
+
+.nav-acordes-section {
+  display: none;
+}
+
+.nav-user {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .nav-item {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 2px;
   background: none;
   border: none;
@@ -25,15 +40,22 @@
   font-size: 10px;
   font-weight: 600;
   cursor: pointer;
-  padding: 5px 15px;
+  padding: 8px 12px;
   border-radius: 8px;
   transition: all 0.2s ease;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  min-width: 50px;
 }
 
-.nav-item i {
-  font-size: 18px;
+.nav-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.nav-text {
+  display: none;
 }
 
 .nav-item:hover {
@@ -80,6 +102,106 @@
     text-align: center;
   }
 
+  .nav-spacer {
+    flex: 1;
+  }
+
+  .nav-user {
+    padding: 20px 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .nav-acordes-section {
+    display: block;
+    padding: 20px 12px 0;
+  }
+
+  .nav-acordes-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 12px;
+  }
+
+  .nav-acordes-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .nav-acordes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .nav-acordes-empty {
+    padding: 12px;
+    text-align: center;
+    color: #666;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+  }
+
+  .nav-acordes-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    padding: 10px 12px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+  }
+
+  .nav-acordes-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .nav-acordes-name {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+  }
+
+  .nav-acordes-meta {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    color: #888;
+  }
+
+  .nav-acordes-more {
+    padding: 8px 12px;
+    background: transparent;
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: #888;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 4px;
+  }
+
+  .nav-acordes-more:hover {
+    border-color: #9DD982;
+    color: #9DD982;
+    background-color: rgba(157, 217, 130, 0.05);
+  }
+
   .nav-item {
     flex-direction: row;
     justify-content: flex-start;
@@ -89,8 +211,13 @@
     border-radius: 12px;
   }
 
-  .nav-item i {
-    font-size: 20px;
+  .nav-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .nav-text {
+    display: block;
   }
 
   .nav-item:hover {

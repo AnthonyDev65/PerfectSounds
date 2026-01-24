@@ -8,6 +8,7 @@ const AdvancedEditor: React.FC = () => {
   const {
     currentSong,
     closeSong,
+    updateSong,
     addSection,
     updateSection,
     deleteSection,
@@ -16,6 +17,8 @@ const AdvancedEditor: React.FC = () => {
     removeChordFromSection,
     reorderChordsInSection,
     isPlaying,
+    currentSectionIndex,
+    currentChordIndex,
     play,
     pause,
     stop
@@ -27,11 +30,23 @@ const AdvancedEditor: React.FC = () => {
   const [newSectionName, setNewSectionName] = useState('');
   const [selectedPreset, setSelectedPreset] = useState(SECTION_PRESETS[0]);
   const [showKeySelector, setShowKeySelector] = useState(false);
+  const [showBpmEditor, setShowBpmEditor] = useState(false);
+  const [tempBpm, setTempBpm] = useState(currentSong?.bpm || 120);
 
   if (!currentSong) return null;
 
   const scales = MusicService.loadScales(currentSong.key);
   const allKeys = MusicService.getAllKeys();
+
+  const handleBpmChange = (newBpm: number) => {
+    const validBpm = Math.max(40, Math.min(240, newBpm));
+    setTempBpm(validBpm);
+  };
+
+  const handleSaveBpm = () => {
+    updateSong({ ...currentSong, bpm: tempBpm });
+    setShowBpmEditor(false);
+  };
 
   const handleTransposeKey = (newKey: string) => {
     if (newKey === currentSong.key) {
@@ -52,18 +67,22 @@ const AdvancedEditor: React.FC = () => {
     const updatedSong = {
       ...currentSong,
       key: newKey,
-      sections: transposedSections
+      sections: transposedSections,
+      updatedAt: Date.now()
     };
 
-    // Guardar cambios
+    // Actualizar en el contexto
     const allSongs = JSON.parse(localStorage.getItem('advancedSongs') || '[]');
     const updatedSongs = allSongs.map((s: any) => 
       s.id === currentSong.id ? updatedSong : s
     );
     localStorage.setItem('advancedSongs', JSON.stringify(updatedSongs));
 
-    // Actualizar el estado
-    window.location.reload(); // Recargar para aplicar cambios
+    // Actualizar el estado local usando el método del contexto
+    updateSong(updatedSong);
+    
+    // Cerrar el modal
+    setShowKeySelector(false);
   };
 
   const handleAddSection = () => {
@@ -137,7 +156,17 @@ const AdvancedEditor: React.FC = () => {
               {currentSong.key}
               <i className="ri-arrow-down-s-line"></i>
             </button>
-            <span className="bpm-badge">{currentSong.bpm} BPM</span>
+            <button 
+              className="bpm-badge clickable"
+              onClick={() => {
+                setTempBpm(currentSong.bpm);
+                setShowBpmEditor(true);
+              }}
+              title="Cambiar BPM"
+            >
+              {currentSong.bpm} BPM
+              <i className="ri-arrow-down-s-line"></i>
+            </button>
           </div>
         </div>
         <div className="playback-controls">
@@ -219,7 +248,7 @@ const AdvancedEditor: React.FC = () => {
                 {section.chords.map((chord, chordIdx) => (
                   <div
                     key={chord.id}
-                    className={`chord-item ${draggedChord?.sectionId === section.id && draggedChord?.index === chordIdx ? 'dragging' : ''}`}
+                    className={`chord-item ${draggedChord?.sectionId === section.id && draggedChord?.index === chordIdx ? 'dragging' : ''} ${isPlaying && currentSectionIndex === sectionIdx && currentChordIndex === chordIdx ? 'playing' : ''}`}
                     draggable
                     onDragStart={() => handleDragStart(section.id, chordIdx)}
                     onDragOver={handleDragOver}
@@ -371,6 +400,58 @@ const AdvancedEditor: React.FC = () => {
             <div className="modal-actions">
               <button className="btn-cancel" onClick={() => setShowKeySelector(false)}>
                 Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* BPM Editor Modal */}
+      {showBpmEditor && (
+        <div className="modal-backdrop" onClick={() => setShowBpmEditor(false)}>
+          <div className="modal-content bpm-editor-modal" onClick={e => e.stopPropagation()}>
+            <h2>Cambiar BPM</h2>
+            
+            <div className="bpm-editor">
+              <button 
+                className="bpm-btn"
+                onClick={() => handleBpmChange(tempBpm - 5)}
+              >
+                <i className="ri-subtract-line"></i>
+              </button>
+              
+              <div className="bpm-display">
+                <input
+                  type="number"
+                  value={tempBpm}
+                  onChange={(e) => handleBpmChange(parseInt(e.target.value) || 120)}
+                  min="40"
+                  max="240"
+                />
+                <span>BPM</span>
+              </div>
+              
+              <button 
+                className="bpm-btn"
+                onClick={() => handleBpmChange(tempBpm + 5)}
+              >
+                <i className="ri-add-line"></i>
+              </button>
+            </div>
+
+            <div className="bpm-presets">
+              <button onClick={() => setTempBpm(60)}>Lento (60)</button>
+              <button onClick={() => setTempBpm(90)}>Moderado (90)</button>
+              <button onClick={() => setTempBpm(120)}>Normal (120)</button>
+              <button onClick={() => setTempBpm(140)}>Rápido (140)</button>
+            </div>
+
+            <div className="modal-actions">
+              <button className="btn-cancel" onClick={() => setShowBpmEditor(false)}>
+                Cancelar
+              </button>
+              <button className="btn-create" onClick={handleSaveBpm}>
+                Guardar
               </button>
             </div>
           </div>

@@ -45,6 +45,34 @@ export const MetronomeProvider: React.FC<MetronomeProviderProps> = ({ children, 
   const selectedChordsRef = useRef(selectedChords);
   const bpmRef = useRef(bpm);
 
+  // Función para crear sonido de metrónomo
+  const playMetronomeSound = useCallback((isAccent: boolean = false) => {
+    try {
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      // Frecuencia más alta para el acento (primer beat)
+      oscillator.frequency.value = isAccent ? 1200 : 800;
+      oscillator.type = 'sine';
+
+      // Volumen
+      gainNode.gain.value = isAccent ? 0.3 : 0.15;
+
+      const now = audioContext.currentTime;
+      oscillator.start(now);
+      
+      // Fade out rápido
+      gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+      oscillator.stop(now + 0.05);
+    } catch (error) {
+      console.error('Error playing metronome sound:', error);
+    }
+  }, []);
+
   // Mantener refs sincronizados
   useEffect(() => {
     beatsPerChordRef.current = beatsPerChord;
@@ -69,13 +97,17 @@ export const MetronomeProvider: React.FC<MetronomeProviderProps> = ({ children, 
     }
   }, []);
 
-  const triggerPulse = useCallback((chordName: string) => {
+  const triggerPulse = useCallback((chordName: string, isFirstBeat: boolean = false) => {
     setActiveChord(chordName);
+    
+    // Reproducir sonido
+    playMetronomeSound(isFirstBeat);
+    
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
       setActiveChord(null);
     }, 150);
-  }, []);
+  }, [playMetronomeSound]);
 
   const start = useCallback(() => {
     if (selectedChordsRef.current.length === 0) return;
@@ -89,8 +121,8 @@ export const MetronomeProvider: React.FC<MetronomeProviderProps> = ({ children, 
     setCurrentChordIndex(chordIndex);
     setCurrentBeat(beat);
     
-    // Primer pulso inmediato (beat 1 del primer acorde)
-    triggerPulse(selectedChordsRef.current[0]);
+    // Primer pulso inmediato (beat 1 del primer acorde) - con acento
+    triggerPulse(selectedChordsRef.current[0], true);
     
     const tick = () => {
       const totalBeats = beatsPerChordRef.current;
@@ -107,18 +139,19 @@ export const MetronomeProvider: React.FC<MetronomeProviderProps> = ({ children, 
         setCurrentChordIndex(chordIndex);
         setCurrentBeat(beat);
         
-        // Activar el pulso visual solo en el beat 1 de cada acorde
-        triggerPulse(chords[chordIndex]);
+        // Activar el pulso visual y sonido con acento en el beat 1 de cada acorde
+        triggerPulse(chords[chordIndex], true);
       } else {
-        // Solo actualizar el beat, sin pulso visual
+        // Solo actualizar el beat y reproducir sonido sin acento
         setCurrentBeat(beat);
+        playMetronomeSound(false);
       }
     };
     
     // Configurar el intervalo - cada beat
     const beatInterval = (60 / bpmRef.current) * 1000;
     intervalRef.current = setInterval(tick, beatInterval);
-  }, [clearTimers, triggerPulse]);
+  }, [clearTimers, triggerPulse, playMetronomeSound]);
 
   const stop = useCallback(() => {
     setIsPlaying(false);

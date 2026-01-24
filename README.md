@@ -28,7 +28,9 @@ Una aplicación web moderna e interactiva para explorar escalas musicales, crear
 - **Guardar progresiones**: Almacena tus progresiones con nombre
 - **Organización**: Por tonalidad, BPM y número de secciones
 - **Carga rápida**: Recupera tus canciones con un clic
-- **Persistencia local**: Todo se guarda en tu navegador
+- **Sincronización en la nube**: Guarda tus canciones en Supabase (opcional)
+- **Autenticación**: Sistema de cuentas para acceso desde cualquier dispositivo
+- **Persistencia local**: Todo se guarda en tu navegador (sin cuenta)
 
 ### 🎨 Diseño Responsivo
 - **Móviles**: Interfaz optimizada para touch con navbar inferior

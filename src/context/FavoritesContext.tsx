@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { useAuth } from './AuthContext';
+import { CloudSyncService } from '../services/CloudSyncService';
 
 interface FavoritesState {
   favoriteKeys: string[];
@@ -9,6 +11,7 @@ interface FavoritesState {
   addFavoriteProgression: (name: string, keys: string[], degrees: string[]) => void;
   removeFavoriteProgression: (name: string) => void;
   clearFavorites: () => void;
+  syncWithCloud: () => Promise<void>;
 }
 
 const FavoritesContext = createContext<FavoritesState | undefined>(undefined);
@@ -28,9 +31,10 @@ interface FavoritesProviderProps {
 export const FavoritesProvider: React.FC<FavoritesProviderProps> = ({ children }) => {
   const [favoriteKeys, setFavoriteKeys] = useState<string[]>([]);
   const [favoriteProgressions, setFavoriteProgressions] = useState<{ name: string; keys: string[]; degrees: string[] }[]>([]);
+  const { user } = useAuth();
 
   // Cargar favoritos desde localStorage
-  React.useEffect(() => {
+  useEffect(() => {
     try {
       const savedKeys = localStorage.getItem('favoriteKeys');
       const savedProgressions = localStorage.getItem('favoriteProgressions');
@@ -53,18 +57,48 @@ export const FavoritesProvider: React.FC<FavoritesProviderProps> = ({ children }
     }
   }, []);
 
-  const addFavoriteKey = (key: string) => {
+  // Sincronizar con Supabase cuando el usuario inicia sesión
+  useEffect(() => {
+    if (user) {
+      syncWithCloud();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
+  const syncWithCloud = async () => {
+    if (!user) return;
+
+    try {
+      const synced = await CloudSyncService.syncFavorites(user.id, favoriteKeys);
+      setFavoriteKeys(synced);
+      localStorage.setItem('favoriteKeys', JSON.stringify(synced));
+    } catch (error) {
+      console.error('Error syncing favorites with cloud:', error);
+    }
+  };
+
+  const addFavoriteKey = async (key: string) => {
     if (!favoriteKeys.includes(key)) {
       const updated = [...favoriteKeys, key];
       setFavoriteKeys(updated);
       localStorage.setItem('favoriteKeys', JSON.stringify(updated));
+      
+      // Sincronizar con la nube si hay sesión
+      if (user) {
+        await CloudSyncService.saveFavorite(user.id, key);
+      }
     }
   };
 
-  const removeFavoriteKey = (key: string) => {
+  const removeFavoriteKey = async (key: string) => {
     const updated = favoriteKeys.filter(k => k !== key);
     setFavoriteKeys(updated);
     localStorage.setItem('favoriteKeys', JSON.stringify(updated));
+    
+    // Eliminar de la nube si hay sesión
+    if (user) {
+      await CloudSyncService.deleteFavorite(user.id, key);
+    }
   };
 
   const isFavoriteKey = (key: string) => {
@@ -99,7 +133,8 @@ export const FavoritesProvider: React.FC<FavoritesProviderProps> = ({ children }
     isFavoriteKey,
     addFavoriteProgression,
     removeFavoriteProgression,
-    clearFavorites
+    clearFavorites,
+    syncWithCloud
   };
 
   return (

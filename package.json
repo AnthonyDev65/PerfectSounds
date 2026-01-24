@@ -1,12 +1,14 @@
 {
-  "name": "noteandscale",
-  "version": "0.1.0",
+  "name": "perfect-sound",
+  "version": "2.0.0",
+  "description": "Modern web app for exploring musical scales, creating chord progressions, and practicing with an integrated metronome",
   "private": true,
   "engines": {
     "node": ">=16.0.0",
     "npm": ">=8.0.0"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.91.1",
     "@types/node": "^16.18.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
@@ -43,5 +45,18 @@
   },
   "devDependencies": {
     "cross-env": "^10.1.0"
-  }
+  },
+  "keywords": [
+    "music",
+    "scales",
+    "chords",
+    "metronome",
+    "music-theory",
+    "chord-progressions",
+    "react",
+    "typescript",
+    "supabase"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
 }

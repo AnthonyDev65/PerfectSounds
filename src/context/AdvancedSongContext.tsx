@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { AdvancedSong, SongSection, ChordItem, SECTION_COLORS } from '../models/AdvancedSong';
+import { useAuth } from './AuthContext';
+import { CloudSyncService } from '../services/CloudSyncService';
 
 interface AdvancedSongContextState {
   advancedSongs: AdvancedSong[];
@@ -15,6 +17,7 @@ interface AdvancedSongContextState {
   deleteSong: (id: string) => void;
   loadSong: (id: string) => void;
   closeSong: () => void;
+  syncWithCloud: () => Promise<void>;
   
   // Sections
   addSection: (name: string, color?: string) => void;
@@ -44,7 +47,7 @@ export const useAdvancedSong = () => {
   return context;
 };
 
-const generateId = () => Math.random().toString(36).substr(2, 9);
+const generateId = () => Math.random().toString(36).substring(2, 9);
 
 export const AdvancedSongProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [advancedSongs, setAdvancedSongs] = useState<AdvancedSong[]>([]);
@@ -53,6 +56,85 @@ export const AdvancedSongProvider: React.FC<{ children: ReactNode }> = ({ childr
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [currentChordIndex, setCurrentChordIndex] = useState(0);
   const [currentRepeat, setCurrentRepeat] = useState(1);
+  const { user } = useAuth();
+
+  // Función para reproducir sonido de metrónomo
+  const playMetronomeSound = (isAccent: boolean = false) => {
+    try {
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      oscillator.frequency.value = isAccent ? 1200 : 800;
+      oscillator.type = 'sine';
+      gainNode.gain.value = isAccent ? 0.3 : 0.15;
+
+      const now = audioContext.currentTime;
+      oscillator.start(now);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+      oscillator.stop(now + 0.05);
+    } catch (error) {
+      console.error('Error playing sound:', error);
+    }
+  };
+
+  // Efecto para manejar el playback
+  useEffect(() => {
+    if (!isPlaying || !currentSong || currentSong.sections.length === 0) {
+      return;
+    }
+
+    const currentSection = currentSong.sections[currentSectionIndex];
+    if (!currentSection || currentSection.chords.length === 0) {
+      setIsPlaying(false);
+      return;
+    }
+
+    const currentChord = currentSection.chords[currentChordIndex];
+    if (!currentChord) {
+      setIsPlaying(false);
+      return;
+    }
+
+    // Reproducir sonido en el primer beat
+    playMetronomeSound(true);
+
+    // Calcular duración del acorde en milisegundos
+    const beatDuration = (60 / currentSong.bpm) * 1000;
+    const chordDuration = beatDuration * currentChord.beats;
+
+    const timer = setTimeout(() => {
+      // Avanzar al siguiente acorde
+      if (currentChordIndex < currentSection.chords.length - 1) {
+        setCurrentChordIndex(prev => prev + 1);
+      } else {
+        // Fin de la sección
+        if (currentRepeat < currentSection.repeatCount) {
+          // Repetir la sección
+          setCurrentRepeat(prev => prev + 1);
+          setCurrentChordIndex(0);
+        } else {
+          // Avanzar a la siguiente sección
+          if (currentSectionIndex < currentSong.sections.length - 1) {
+            setCurrentSectionIndex(prev => prev + 1);
+            setCurrentChordIndex(0);
+            setCurrentRepeat(1);
+          } else {
+            // Fin de la canción
+            setIsPlaying(false);
+            setCurrentSectionIndex(0);
+            setCurrentChordIndex(0);
+            setCurrentRepeat(1);
+          }
+        }
+      }
+    }, chordDuration);
+
+    return () => clearTimeout(timer);
+  }, [isPlaying, currentSong, currentSectionIndex, currentChordIndex, currentRepeat]);
 
   // Cargar desde localStorage
   useEffect(() => {
@@ -66,8 +148,28 @@ export const AdvancedSongProvider: React.FC<{ children: ReactNode }> = ({ childr
     }
   }, []);
 
+  // Sincronizar con Supabase cuando el usuario inicia sesión
+  useEffect(() => {
+    if (user) {
+      syncWithCloud();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
+  const syncWithCloud = async () => {
+    if (!user) return;
+
+    try {
+      const synced = await CloudSyncService.syncAdvancedSongs(user.id, advancedSongs);
+      setAdvancedSongs(synced);
+      localStorage.setItem('advancedSongs', JSON.stringify(synced));
+    } catch (error) {
+      console.error('Error syncing advanced songs with cloud:', error);
+    }
+  };
+
   // Guardar en localStorage
-  const saveSongs = (songs: AdvancedSong[]) => {
+  const saveSongs = async (songs: AdvancedSong[]) => {
     localStorage.setItem('advancedSongs', JSON.stringify(songs));
     setAdvancedSongs(songs);
   };
@@ -84,6 +186,12 @@ export const AdvancedSongProvider: React.FC<{ children: ReactNode }> = ({ childr
     };
     saveSongs([...advancedSongs, newSong]);
     setCurrentSong(newSong);
+    
+    // Sincronizar con la nube si hay sesión
+    if (user) {
+      CloudSyncService.saveAdvancedSong(user.id, newSong);
+    }
+    
     return newSong;
   };
 
@@ -94,12 +202,22 @@ export const AdvancedSongProvider: React.FC<{ children: ReactNode }> = ({ childr
     if (currentSong?.id === song.id) {
       setCurrentSong(updated);
     }
+    
+    // Sincronizar con la nube si hay sesión
+    if (user) {
+      CloudSyncService.saveAdvancedSong(user.id, updated);
+    }
   };
 
-  const deleteSong = (id: string) => {
+  const deleteSong = async (id: string) => {
     saveSongs(advancedSongs.filter(s => s.id !== id));
     if (currentSong?.id === id) {
       setCurrentSong(null);
+    }
+    
+    // Eliminar de la nube si hay sesión
+    if (user) {
+      await CloudSyncService.deleteAdvancedSong(user.id, id);
     }
   };
 
@@ -218,8 +336,13 @@ export const AdvancedSongProvider: React.FC<{ children: ReactNode }> = ({ childr
   };
 
   // Playback
-  const play = () => setIsPlaying(true);
+  const play = () => {
+    if (!currentSong || currentSong.sections.length === 0) return;
+    setIsPlaying(true);
+  };
+  
   const pause = () => setIsPlaying(false);
+  
   const stop = () => {
     setIsPlaying(false);
     setCurrentSectionIndex(0);
@@ -239,6 +362,7 @@ export const AdvancedSongProvider: React.FC<{ children: ReactNode }> = ({ childr
     deleteSong,
     loadSong,
     closeSong,
+    syncWithCloud,
     addSection,
     updateSection,
     deleteSection,

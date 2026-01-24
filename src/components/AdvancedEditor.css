@@ -9,6 +9,7 @@
   background-color: #2A2A34;
   padding-bottom: calc(60px + env(safe-area-inset-bottom));
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 /* Desktop */
@@ -90,6 +91,24 @@
   color: #B579D3;
 }
 
+.bpm-badge.clickable {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s;
+  border: 1px solid rgba(181, 121, 211, 0.3);
+}
+
+.bpm-badge.clickable:hover {
+  background-color: rgba(181, 121, 211, 0.3);
+  transform: scale(1.05);
+}
+
+.bpm-badge.clickable i {
+  font-size: 14px;
+}
+
 .playback-controls {
   display: flex;
   gap: 8px;
@@ -132,6 +151,7 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
+  min-height: 0;
 }
 
 .empty-sections {
@@ -160,6 +180,7 @@
   border-radius: 12px;
   border-left: 4px solid;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .section-header {
@@ -303,6 +324,31 @@
 .chord-item.dragging {
   opacity: 0.5;
   transform: scale(1.05);
+}
+
+.chord-item.playing {
+  background-color: #9DD982;
+  animation: pulse 0.3s ease-in-out;
+  box-shadow: 0 0 20px rgba(157, 217, 130, 0.6);
+}
+
+.chord-item.playing .chord-name,
+.chord-item.playing .chord-degree,
+.chord-item.playing .chord-beats span {
+  color: #2A2A34;
+}
+
+.chord-item.playing .chord-beats button {
+  color: #2A2A34;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
 }
 
 .chord-name {
@@ -486,6 +532,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
+  flex-shrink: 0;
 }
 
 .add-section-btn:hover {
@@ -644,11 +691,13 @@
   .sections-container {
     padding: 25px;
     gap: 20px;
+    overflow-y: auto;
   }
 
   .section-card {
     border-radius: 16px;
     border-left-width: 5px;
+    flex-shrink: 0;
   }
 
   .section-header {
@@ -728,7 +777,9 @@
 }
 
 .key-selector-modal {
-  max-width: 500px;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .transpose-warning {
@@ -756,16 +807,17 @@
 }
 
 .key-option {
-  padding: 15px 10px;
+  padding: 12px 8px;
   background-color: #3A3A4A;
   border: 2px solid transparent;
   border-radius: 10px;
   color: white;
   font-family: 'Montserrat', sans-serif;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
+  text-align: center;
 }
 
 .key-option:hover {
@@ -783,5 +835,113 @@
 @media (max-width: 480px) {
   .keys-grid {
     grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
   }
+  
+  .key-option {
+    padding: 10px 6px;
+    font-size: 13px;
+  }
+  
+  .key-selector-modal {
+    max-height: 70vh;
+  }
+}
+
+/* BPM Editor */
+.bpm-editor-modal {
+  max-width: 400px;
+}
+
+.bpm-editor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.bpm-btn {
+  width: 48px;
+  height: 48px;
+  background-color: #3A3A4A;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.bpm-btn:hover {
+  background-color: #4A4A5A;
+  transform: scale(1.05);
+}
+
+.bpm-btn:active {
+  transform: scale(0.95);
+}
+
+.bpm-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.bpm-display input {
+  width: 100px;
+  padding: 12px;
+  background-color: #3A3A4A;
+  border: 2px solid #B579D3;
+  border-radius: 12px;
+  color: white;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.bpm-display input:focus {
+  outline: none;
+  border-color: #9DD982;
+}
+
+.bpm-display span {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.bpm-presets {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.bpm-presets button {
+  padding: 12px;
+  background-color: #3A3A4A;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  color: white;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.bpm-presets button:hover {
+  background-color: #4A4A5A;
+  border-color: #B579D3;
+  transform: scale(1.05);
 }

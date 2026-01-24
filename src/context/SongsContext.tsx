@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { useAuth } from './AuthContext';
+import { CloudSyncService } from '../services/CloudSyncService';
 
 export interface SavedSong {
   id: string;
@@ -14,6 +16,7 @@ interface SongsState {
   saveSong: (name: string, chords: string[], degrees: string[], key: string) => void;
   deleteSong: (id: string) => void;
   getSong: (id: string) => SavedSong | undefined;
+  syncWithCloud: () => Promise<void>;
 }
 
 const SongsContext = createContext<SongsState | undefined>(undefined);
@@ -32,6 +35,7 @@ interface SongsProviderProps {
 
 export const SongsProvider: React.FC<SongsProviderProps> = ({ children }) => {
   const [songs, setSongs] = useState<SavedSong[]>([]);
+  const { user } = useAuth();
 
   // Cargar canciones desde localStorage
   useEffect(() => {
@@ -48,7 +52,27 @@ export const SongsProvider: React.FC<SongsProviderProps> = ({ children }) => {
     }
   }, []);
 
-  const saveSong = (name: string, chords: string[], degrees: string[], key: string) => {
+  // Sincronizar con Supabase cuando el usuario inicia sesión
+  useEffect(() => {
+    if (user) {
+      syncWithCloud();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
+  const syncWithCloud = async () => {
+    if (!user) return;
+
+    try {
+      const synced = await CloudSyncService.syncSimpleSongs(user.id, songs);
+      setSongs(synced);
+      localStorage.setItem('savedSongs', JSON.stringify(synced));
+    } catch (error) {
+      console.error('Error syncing songs with cloud:', error);
+    }
+  };
+
+  const saveSong = async (name: string, chords: string[], degrees: string[], key: string) => {
     const newSong: SavedSong = {
       id: Date.now().toString(),
       name,
@@ -61,12 +85,22 @@ export const SongsProvider: React.FC<SongsProviderProps> = ({ children }) => {
     const updated = [...songs, newSong];
     setSongs(updated);
     localStorage.setItem('savedSongs', JSON.stringify(updated));
+
+    // Sincronizar con la nube si hay sesión
+    if (user) {
+      await CloudSyncService.saveSimpleSong(user.id, newSong);
+    }
   };
 
-  const deleteSong = (id: string) => {
+  const deleteSong = async (id: string) => {
     const updated = songs.filter(song => song.id !== id);
     setSongs(updated);
     localStorage.setItem('savedSongs', JSON.stringify(updated));
+
+    // Eliminar de la nube si hay sesión
+    if (user) {
+      await CloudSyncService.deleteSimpleSong(user.id, id);
+    }
   };
 
   const getSong = (id: string) => {
@@ -77,7 +111,8 @@ export const SongsProvider: React.FC<SongsProviderProps> = ({ children }) => {
     songs,
     saveSong,
     deleteSong,
-    getSong
+    getSong,
+    syncWithCloud
   };
 
   return (

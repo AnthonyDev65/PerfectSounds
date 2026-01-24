@@ -1,0 +1,233 @@
+.auth-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 2000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.auth-modal-content {
+  position: relative;
+  background: linear-gradient(135deg, #2D2D3A 0%, #1E1E26 100%);
+  border-radius: 20px;
+  padding: 40px 30px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.auth-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: none;
+  color: #888;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.auth-close-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.auth-header h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: white;
+  margin: 0 0 8px 0;
+}
+
+.auth-header p {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  color: #888;
+  margin: 0;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-field label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #9DD982;
+}
+
+.form-field input {
+  width: 100%;
+  padding: 14px 16px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: white;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  box-sizing: border-box;
+  transition: all 0.2s;
+}
+
+.form-field input:focus {
+  outline: none;
+  border-color: #9DD982;
+  background-color: rgba(157, 217, 130, 0.05);
+}
+
+.form-field input::placeholder {
+  color: #666;
+}
+
+.auth-error {
+  padding: 12px;
+  background-color: rgba(235, 126, 122, 0.2);
+  border: 1px solid rgba(235, 126, 122, 0.4);
+  border-radius: 10px;
+  color: #EB7E7A;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  text-align: center;
+}
+
+.auth-message {
+  padding: 12px;
+  background-color: rgba(157, 217, 130, 0.2);
+  border: 1px solid rgba(157, 217, 130, 0.4);
+  border-radius: 10px;
+  color: #9DD982;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  text-align: center;
+}
+
+.auth-submit-btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #9DD982, #79B4D3);
+  border: none;
+  border-radius: 12px;
+  color: #1E1E26;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 8px;
+}
+
+.auth-submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(157, 217, 130, 0.4);
+}
+
+.auth-submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.auth-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.rotating {
+  animation: rotate 1s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.auth-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.auth-link {
+  background: transparent;
+  border: none;
+  color: #888;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.2s;
+  text-align: center;
+}
+
+.auth-link:hover {
+  color: #9DD982;
+}
+
+.auth-link strong {
+  color: #9DD982;
+  font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  .auth-modal-content {
+    padding: 30px 20px;
+  }
+
+  .auth-header h2 {
+    font-size: 22px;
+  }
+}
