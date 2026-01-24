@@ -24,7 +24,7 @@ const AdvancedPage: React.FC = () => {
 
   const handleDeleteSong = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (window.confirm('¿Eliminar esta canción avanzada?')) {
+    if (window.confirm('¿Eliminar esta canción?')) {
       deleteSong(id);
     }
   };
@@ -37,7 +37,7 @@ const AdvancedPage: React.FC = () => {
   return (
     <div className="advanced-page">
       <div className="advanced-header">
-        <h1>Notas Avanzadas</h1>
+        <h1>Acordes</h1>
         <p>Crea canciones con secciones personalizadas</p>
       </div>
 
@@ -53,8 +53,8 @@ const AdvancedPage: React.FC = () => {
         {advancedSongs.length === 0 ? (
           <div className="empty-state">
             <i className="ri-music-2-line"></i>
-            <p>No tienes canciones avanzadas</p>
-            <span>Crea una nueva para empezar</span>
+            <p>No tienes acordes guardados</p>
+            <span>Crea una nueva canción para empezar</span>
           </div>
         ) : (
           advancedSongs.map(song => (
@@ -102,7 +102,7 @@ const AdvancedPage: React.FC = () => {
       {showNewSongModal && (
         <div className="modal-backdrop" onClick={() => setShowNewSongModal(false)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
-            <h2>Nueva Canción Avanzada</h2>
+            <h2>Nueva Canción</h2>
             
             <div className="form-group">
               <label>Nombre</label>

@@ -58,7 +58,7 @@ const NavBar: React.FC = () => {
         onClick={() => handleNavClick('/advanced')}
       >
         <AdvancedIcon className="nav-icon" />
-        <span className="nav-text">Avanzado</span>
+        <span className="nav-text">Acordes</span>
       </button>
 
       <button 
