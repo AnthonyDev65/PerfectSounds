@@ -25,7 +25,7 @@ Para sugerir nuevas características:
 
 1. **Fork el repositorio**
    ```bash
-   git clone https://github.com/tu-usuario/perfect-sound.git
+   git clone https://github.com/AnthonyDev65/PerfectSounds.git
    cd perfect-sound
    ```
 

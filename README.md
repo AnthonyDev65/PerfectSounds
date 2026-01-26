@@ -39,15 +39,8 @@ Una aplicación web moderna e interactiva para explorar escalas musicales, crear
 
 ## 🚀 Demo en Vivo
 
-[Ver Demo](https://tu-proyecto.vercel.app) *(Actualiza con tu URL de Vercel)*
+[Ver Demo](https://perfect-sounds.vercel.app/)
 
-## 📸 Screenshots
-
-### Vista Móvil
-*Agrega screenshots aquí*
-
-### Vista Desktop
-*Agrega screenshots aquí*
 
 ## 🛠️ Tecnologías
 
@@ -69,7 +62,7 @@ Una aplicación web moderna e interactiva para explorar escalas musicales, crear
 
 1. **Clona el repositorio**
    ```bash
-   git clone https://github.com/tu-usuario/perfect-sound.git
+   git clone https://github.com/AnthonyDev65/PerfectSounds.git
    cd perfect-sound
    ```
 
@@ -88,20 +81,6 @@ Una aplicación web moderna e interactiva para explorar escalas musicales, crear
    ```bash
    npm run build
    ```
-
-## 🌐 Deploy
-
-### Vercel (Recomendado)
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/tu-usuario/perfect-sound)
-
-O manualmente:
-```bash
-npm install -g vercel
-vercel --prod
-```
-
-Ver [DEPLOYMENT.md](DEPLOYMENT.md) para más detalles.
 
 ## 📖 Uso
 
@@ -143,11 +122,11 @@ Ver [DEPLOYMENT.md](DEPLOYMENT.md) para más detalles.
 
 ## 🐛 Reportar Bugs
 
-Encontraste un bug? [Abre un issue](https://github.com/tu-usuario/perfect-sound/issues/new?template=bug_report.md)
+Encontraste un bug? [Abre un issue](https://github.com/AnthonyDev65/PerfectSounds/issues/new?template=bug_report.md)
 
 ## 💡 Solicitar Features
 
-Tienes una idea? [Abre un issue](https://github.com/tu-usuario/perfect-sound/issues/new?template=feature_request.md)
+Tienes una idea? [Abre un issue](https://github.com/AnthonyDev65/PerfectSounds/issues/new?template=feature_request.md)
 
 ## 📄 Licencia
 
@@ -156,8 +135,7 @@ Este proyecto está bajo la Licencia MIT - ver [LICENSE](LICENSE) para detalles.
 ## 👨‍💻 Autor
 
 **Tu Nombre**
-- GitHub: [@tu-usuario](https://github.com/tu-usuario)
-- Twitter: [@tu-twitter](https://twitter.com/tu-twitter)
+- GitHub: [@AnthoniDev65](https://github.com/AnthonyDev65)
 
 ## 🙏 Agradecimientos
 
@@ -167,10 +145,10 @@ Este proyecto está bajo la Licencia MIT - ver [LICENSE](LICENSE) para detalles.
 
 ## 📊 Estado del Proyecto
 
-![GitHub issues](https://img.shields.io/github/issues/tu-usuario/perfect-sound)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/tu-usuario/perfect-sound)
-![GitHub stars](https://img.shields.io/github/stars/tu-usuario/perfect-sound)
-![GitHub forks](https://img.shields.io/github/forks/tu-usuario/perfect-sound)
+![GitHub issues](https://img.shields.io/github/issues/AnthonyDev65/PerfectSounds)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/AnthonyDev65/PerfectSounds)
+![GitHub stars](https://img.shields.io/github/stars/AnthonyDev65/PerfectSounds)
+![GitHub forks](https://img.shields.io/github/forks/AnthonyDev65/PerfectSounds)
 
 ---
 
