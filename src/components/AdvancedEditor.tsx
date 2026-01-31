@@ -32,6 +32,11 @@ const AdvancedEditor: React.FC = () => {
   const [showKeySelector, setShowKeySelector] = useState(false);
   const [showBpmEditor, setShowBpmEditor] = useState(false);
   const [tempBpm, setTempBpm] = useState(currentSong?.bpm || 120);
+  const [visualizerMode, setVisualizerMode] = useState(false);
+  const [chordsPerRow, setChordsPerRow] = useState(4);
+  const [showVisualizerSettings, setShowVisualizerSettings] = useState(false);
+  const [hiddenSections, setHiddenSections] = useState<Set<string>>(new Set());
+  const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
 
   if (!currentSong) return null;
 
@@ -46,6 +51,43 @@ const AdvancedEditor: React.FC = () => {
   const handleSaveBpm = () => {
     updateSong({ ...currentSong, bpm: tempBpm });
     setShowBpmEditor(false);
+  };
+
+  const handleVisualizerButtonPress = () => {
+    const timer = setTimeout(() => {
+      setShowVisualizerSettings(true);
+    }, 500); // 500ms para long press
+    setLongPressTimer(timer);
+  };
+
+  const handleVisualizerButtonRelease = () => {
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      setLongPressTimer(null);
+    }
+  };
+
+  const handleVisualizerClick = () => {
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      setLongPressTimer(null);
+    }
+    // En modo visualizador, siempre abre el modal
+    if (visualizerMode) {
+      setShowVisualizerSettings(true);
+    } else {
+      setVisualizerMode(!visualizerMode);
+    }
+  };
+
+  const toggleSectionVisibility = (sectionId: string) => {
+    const newHidden = new Set(hiddenSections);
+    if (newHidden.has(sectionId)) {
+      newHidden.delete(sectionId);
+    } else {
+      newHidden.add(sectionId);
+    }
+    setHiddenSections(newHidden);
   };
 
   const handleTransposeKey = (newKey: string) => {
@@ -139,9 +181,47 @@ const AdvancedEditor: React.FC = () => {
   };
 
   return (
-    <div className="advanced-editor">
+    <div className={`advanced-editor ${visualizerMode ? 'fullscreen-visualizer' : ''}`}>
+      {/* Floating Buttons (only in visualizer mode) */}
+      {visualizerMode && (
+        <div className="floating-buttons">
+          <button 
+            className="floating-btn exit-btn"
+            onClick={() => setVisualizerMode(false)}
+            title="Salir del visualizador"
+          >
+            <i className="ri-close-line"></i>
+          </button>
+          {isPlaying ? (
+            <button 
+              className="floating-btn pause-btn"
+              onClick={pause}
+              title="Pausar"
+            >
+              <i className="ri-pause-fill"></i>
+            </button>
+          ) : (
+            <button 
+              className="floating-btn play-btn"
+              onClick={play}
+              title="Reproducir"
+            >
+              <i className="ri-play-fill"></i>
+            </button>
+          )}
+          <button 
+            className="floating-btn settings-btn"
+            onClick={() => setShowVisualizerSettings(true)}
+            title="Configuración del visualizador"
+          >
+            <i className="ri-settings-3-line"></i>
+          </button>
+        </div>
+      )}
+
       {/* Header */}
-      <div className="editor-header">
+      {!visualizerMode && (
+        <div className="editor-header">
         <button className="back-btn" onClick={closeSong}>
           <i className="ri-arrow-left-line"></i>
         </button>
@@ -182,11 +262,73 @@ const AdvancedEditor: React.FC = () => {
           <button className="control-btn" onClick={stop}>
             <i className="ri-stop-fill"></i>
           </button>
+          <button 
+            className={`control-btn ${visualizerMode ? 'active' : ''}`}
+            onClick={handleVisualizerClick}
+            onMouseDown={handleVisualizerButtonPress}
+            onMouseUp={handleVisualizerButtonRelease}
+            onMouseLeave={handleVisualizerButtonRelease}
+            onTouchStart={handleVisualizerButtonPress}
+            onTouchEnd={handleVisualizerButtonRelease}
+            title="Modo visualizador (mantén presionado para opciones)"
+          >
+            <i className="ri-eye-line"></i>
+          </button>
         </div>
       </div>
+      )}
+
+      {/* Visualizer Mode */}
+      {visualizerMode && currentSong.sections.length > 0 && (
+        <div className="visualizer-container">
+          <div className="visualizer-chords">
+            {currentSong.sections
+              .filter(section => !hiddenSections.has(section.id))
+              .map((section, sectionIdx) => {
+                const actualSectionIdx = currentSong.sections.findIndex(s => s.id === section.id);
+                return (
+                  <div key={section.id} className="visualizer-section">
+                    <div className="visualizer-section-header">
+                      <span 
+                        className="visualizer-section-dot" 
+                        style={{ backgroundColor: section.color }}
+                      />
+                      <span className="visualizer-section-name">{section.name}</span>
+                      {section.repeatCount > 1 && (
+                        <span className="visualizer-repeat">×{section.repeatCount}</span>
+                      )}
+                    </div>
+                    <div 
+                      className="visualizer-chords-grid"
+                      style={{ 
+                        gridTemplateColumns: `repeat(${chordsPerRow}, 1fr)` 
+                      }}
+                    >
+                      {section.chords.map((chord, chordIdx) => (
+                        <div
+                          key={chord.id}
+                          className={`visualizer-chord ${isPlaying && currentSectionIndex === actualSectionIdx && currentChordIndex === chordIdx ? 'playing' : ''}`}
+                        >
+                          <div className="visualizer-chord-name">{chord.name}</div>
+                          <div 
+                            className="visualizer-chord-degree"
+                            style={{ color: chord.degreesColor }}
+                          >
+                            {chord.degrees}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
+      )}
 
       {/* Sections */}
-      <div className="sections-container">
+      {!visualizerMode && (
+        <div className="sections-container">
         {currentSong.sections.length === 0 ? (
           <div className="empty-sections">
             <i className="ri-layout-3-line"></i>
@@ -286,7 +428,7 @@ const AdvancedEditor: React.FC = () => {
               </div>
 
               {/* Chord Picker */}
-              {showChordPicker === section.id && (
+              {showChordPicker === section.id && !visualizerMode && (
                 <div className="chord-picker">
                   <div className="chord-picker-header">
                     <span>Selecciona un acorde ({currentSong.key})</span>
@@ -326,6 +468,7 @@ const AdvancedEditor: React.FC = () => {
           Agregar Sección
         </button>
       </div>
+      )}
 
       {/* Section Modal */}
       {showSectionModal && (
@@ -452,6 +595,56 @@ const AdvancedEditor: React.FC = () => {
               </button>
               <button className="btn-create" onClick={handleSaveBpm}>
                 Guardar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Visualizer Settings Modal */}
+      {showVisualizerSettings && (
+        <div className="modal-backdrop" onClick={() => setShowVisualizerSettings(false)}>
+          <div className="modal-content visualizer-settings-modal" onClick={e => e.stopPropagation()}>
+            <h2>Configuración del Visualizador</h2>
+            
+            <div className="form-group">
+              <label>Acordes por fila</label>
+              <div className="chords-per-row-selector-modal">
+                {[1, 2, 3, 4].map(num => (
+                  <button
+                    key={num}
+                    className={`row-btn-modal ${chordsPerRow === num ? 'active' : ''}`}
+                    onClick={() => setChordsPerRow(num)}
+                  >
+                    {num}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>Secciones visibles</label>
+              <div className="sections-visibility-list">
+                {currentSong.sections.map(section => (
+                  <button
+                    key={section.id}
+                    className={`section-visibility-item ${hiddenSections.has(section.id) ? 'hidden' : 'visible'}`}
+                    onClick={() => toggleSectionVisibility(section.id)}
+                  >
+                    <span 
+                      className="section-visibility-dot" 
+                      style={{ backgroundColor: section.color }}
+                    />
+                    <span className="section-visibility-name">{section.name}</span>
+                    <i className={`ri-eye-${hiddenSections.has(section.id) ? 'off' : ''}-line`}></i>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="modal-actions">
+              <button className="btn-create" onClick={() => setShowVisualizerSettings(false)}>
+                Cerrar
               </button>
             </div>
           </div>
