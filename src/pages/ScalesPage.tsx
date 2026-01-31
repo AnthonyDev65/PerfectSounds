@@ -24,18 +24,16 @@ const ScalesPage: React.FC = () => {
     setCurrentNote, 
     scales, 
     setScales, 
-    selectedDegrees,
-    setSelectedDegrees,
-    selectionOrder,
-    setSelectionOrder,
-    toggleDegreeSelection 
+    selectedScales,
+    addScale,
+    removeScaleAt,
+    reset
   } = useScaleSelection();
   const { isFavoriteKey, addFavoriteKey, removeFavoriteKey } = useFavorites();
 
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
   const [isSubMenuVisible, setIsSubMenuVisible] = useState(false);
   const [subMenuOptions, setSubMenuOptions] = useState<NoteOption[]>([]);
-  const [selectedScales, setSelectedScales] = useState<Scale[]>([]);
   const [gridSpan, setGridSpan] = useState(1);
   const [showMetronome, setShowMetronome] = useState(false);
   const [showSongsModal, setShowSongsModal] = useState(false);
@@ -43,49 +41,14 @@ const ScalesPage: React.FC = () => {
   const loadScales = useCallback((noteKey: string) => {
     setCurrentNote(noteKey);
     const loadedScales = MusicService.loadScales(noteKey);
-    
-    // Leer directamente del localStorage para asegurar que tenemos los datos más recientes
-    let degreesToApply = selectedDegrees;
-    try {
-      const saved = localStorage.getItem('selectedDegrees');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed && typeof parsed === 'object') {
-          degreesToApply = parsed;
-        }
-      }
-    } catch (error) {
-      console.error('Error reading selectedDegrees:', error);
-    }
-    
-    const scalesWithSelection = MusicService.applySelectedDegrees(loadedScales, degreesToApply);
-    setScales(scalesWithSelection);
-  }, [setCurrentNote, setScales, selectedDegrees]);
+    setScales(loadedScales);
+  }, [setCurrentNote, setScales]);
 
   useEffect(() => {
     if (note) {
       loadScales(note);
     }
   }, [note, loadScales]);
-
-  // Ordenar las escalas seleccionadas según el orden de selección
-  useEffect(() => {
-    const selected = scales.filter(scale => scale.isSelected);
-    
-    // Ordenar según selectionOrder
-    const orderedSelected = selected.sort((a, b) => {
-      const indexA = selectionOrder.indexOf(a.degrees);
-      const indexB = selectionOrder.indexOf(b.degrees);
-      
-      // Si no está en el orden, ponerlo al final
-      if (indexA === -1) return 1;
-      if (indexB === -1) return -1;
-      
-      return indexA - indexB;
-    });
-    
-    setSelectedScales(orderedSelected);
-  }, [scales, selectionOrder]);
 
   const handleIslandClick = () => {
     if (isSubMenuVisible) {
@@ -111,21 +74,13 @@ const ScalesPage: React.FC = () => {
   };
 
   const handleScaleClick = (scale: Scale) => {
-    const newIsSelected = !scale.isSelected;
-    toggleDegreeSelection(scale.degrees, newIsSelected);
-    
-    const updatedScales = scales.map(s => 
-      s.degrees === scale.degrees ? { ...s, isSelected: newIsSelected } : s
-    );
-    setScales(updatedScales);
+    // Siempre agregar la nota, permitiendo repeticiones
+    addScale(scale);
   };
 
   const handleBackButton = () => {
     // Reiniciar la selección al volver atrás
-    setSelectedDegrees({});
-    setSelectionOrder([]);
-    localStorage.removeItem('selectedDegrees');
-    localStorage.removeItem('selectionOrder');
+    reset();
     navigate('/');
   };
 
@@ -142,26 +97,11 @@ const ScalesPage: React.FC = () => {
     setIsSubMenuVisible(false);
   };
 
-  // Función para cargar una canción guardada por grados
-  const handleLoadSongByDegrees = (degrees: string[]) => {
-    // Crear objeto con todos los grados seleccionados
-    const newSelectedDegrees: { [key: string]: boolean } = {};
-    degrees.forEach(degree => {
-      newSelectedDegrees[degree] = true;
-    });
-    
-    // Actualizar el estado de una sola vez
-    setSelectedDegrees(newSelectedDegrees);
-    setSelectionOrder(degrees); // Mantener el orden guardado
-    localStorage.setItem('selectedDegrees', JSON.stringify(newSelectedDegrees));
-    localStorage.setItem('selectionOrder', JSON.stringify(degrees));
-
-    // Actualizar las escalas con las nuevas selecciones
-    const updatedScales = scales.map(scale => ({
-      ...scale,
-      isSelected: degrees.includes(scale.degrees)
-    }));
-    setScales(updatedScales);
+  // Función para cargar una canción guardada
+  const handleLoadSongByScales = (scales: Scale[]) => {
+    // Cargar las escalas directamente
+    reset(); // Limpiar primero
+    scales.forEach(scale => addScale(scale));
   };
 
   const notes = MusicService.getAllNotes();
@@ -224,6 +164,7 @@ const ScalesPage: React.FC = () => {
           selectedScales={selectedScales}
           gridSpan={gridSpan}
           onGridSpanChange={setGridSpan}
+          onRemoveScale={removeScaleAt}
         />
 
         <NotesOverlay
@@ -245,8 +186,9 @@ const ScalesPage: React.FC = () => {
           onClose={() => setShowSongsModal(false)}
           currentChords={selectedChordNames}
           currentDegrees={selectedScales.map(s => s.degrees)}
+          currentScales={selectedScales}
           currentKey={currentNote}
-          onLoadSong={handleLoadSongByDegrees}
+          onLoadSong={handleLoadSongByScales}
         />
       </div>
     </MetronomeProvider>

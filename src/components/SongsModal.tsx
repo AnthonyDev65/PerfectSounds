@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useSongs, SavedSong } from '../context/SongsContext';
+import { Scale } from '../models/Scale';
 import './SongsModal.css';
 
 interface SongsModalProps {
@@ -7,8 +8,9 @@ interface SongsModalProps {
   onClose: () => void;
   currentChords: string[];
   currentDegrees: string[];
+  currentScales: Scale[];
   currentKey: string;
-  onLoadSong: (degrees: string[]) => void;
+  onLoadSong: (scales: Scale[]) => void;
 }
 
 const SongsModal: React.FC<SongsModalProps> = ({ 
@@ -16,6 +18,7 @@ const SongsModal: React.FC<SongsModalProps> = ({
   onClose, 
   currentChords,
   currentDegrees,
+  currentScales,
   currentKey,
   onLoadSong 
 }) => {
@@ -27,20 +30,20 @@ const SongsModal: React.FC<SongsModalProps> = ({
 
   const handleSave = () => {
     if (songName.trim() && currentChords.length > 0) {
-      saveSong(songName.trim(), currentChords, currentDegrees, currentKey);
+      saveSong(songName.trim(), currentChords, currentDegrees, currentScales, currentKey);
       setSongName('');
       setShowSaveForm(false);
     }
   };
 
   const handleLoad = (song: SavedSong) => {
-    // Si la canción tiene degrees, usarlos; si no, es una canción antigua
-    const degreesToLoad = song.degrees && song.degrees.length > 0 
-      ? song.degrees 
+    // Cargar las escalas completas si existen
+    const scalesToLoad = song.scales && song.scales.length > 0 
+      ? song.scales 
       : [];
     
-    if (degreesToLoad.length > 0) {
-      onLoadSong(degreesToLoad);
+    if (scalesToLoad.length > 0) {
+      onLoadSong(scalesToLoad);
     }
     onClose();
   };

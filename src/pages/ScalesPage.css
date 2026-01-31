@@ -287,6 +287,22 @@
   grid-template-columns: repeat(2, 1fr);
 }
 
+/* Modo Flex - Horizontal */
+.selected-scales-grid.flex-mode {
+  display: flex;
+  flex-direction: row;
+  gap: clamp(8px, 2vw, 10px);
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: clamp(8px, 2vw, 10px);
+}
+
+.selected-scales-grid.flex-mode .selected-scale-item {
+  min-width: clamp(120px, 30vw, 150px);
+  flex-shrink: 0;
+}
+
 .selected-scale-item {
   background-color: #57566A;
   border-radius: clamp(12px, 3vw, 15px);
@@ -295,6 +311,37 @@
   align-items: center;
   justify-content: space-between;
   min-height: clamp(80px, 20vw, 100px);
+  position: relative;
+}
+
+.remove-scale-btn {
+  position: absolute;
+  top: clamp(6px, 1.5vw, 8px);
+  right: clamp(6px, 1.5vw, 8px);
+  width: clamp(24px, 6vw, 28px);
+  height: clamp(24px, 6vw, 28px);
+  background-color: rgba(235, 126, 122, 0.9);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: clamp(14px, 3.5vw, 16px);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  opacity: 0.8;
+  z-index: 10;
+}
+
+.remove-scale-btn:hover {
+  opacity: 1;
+  transform: scale(1.1);
+  background-color: #EB7E7A;
+}
+
+.remove-scale-btn:active {
+  transform: scale(0.95);
 }
 
 .selected-scale-name {

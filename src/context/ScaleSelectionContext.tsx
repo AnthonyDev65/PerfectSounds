@@ -4,13 +4,12 @@ import { Scale } from '../models/Scale';
 interface ScaleSelectionState {
   currentNote: string;
   scales: Scale[];
-  selectedDegrees: { [degree: string]: boolean };
-  selectionOrder: string[]; // Array para mantener el orden de selección
+  selectedScales: Scale[]; // Cambiar a array para permitir repeticiones
   setCurrentNote: (note: string) => void;
   setScales: (scales: Scale[]) => void;
-  setSelectedDegrees: (degrees: { [degree: string]: boolean }) => void;
-  setSelectionOrder: (order: string[]) => void;
-  toggleDegreeSelection: (degree: string, isSelected: boolean) => void;
+  setSelectedScales: (scales: Scale[]) => void;
+  addScale: (scale: Scale) => void;
+  removeScaleAt: (index: number) => void;
   reset: () => void;
 }
 
@@ -31,73 +30,50 @@ interface ScaleSelectionProviderProps {
 export const ScaleSelectionProvider: React.FC<ScaleSelectionProviderProps> = ({ children }) => {
   const [currentNote, setCurrentNote] = useState<string>('C');
   const [scales, setScales] = useState<Scale[]>([]);
-  const [selectedDegrees, setSelectedDegrees] = useState<{ [degree: string]: boolean }>({});
-  const [selectionOrder, setSelectionOrder] = useState<string[]>([]);
+  const [selectedScales, setSelectedScales] = useState<Scale[]>([]);
 
-  const toggleDegreeSelection = (degree: string, isSelected: boolean) => {
-    const updatedDegrees = { ...selectedDegrees, [degree]: isSelected };
-    setSelectedDegrees(updatedDegrees);
-    
-    // Actualizar el orden de selección
-    let updatedOrder: string[];
-    if (isSelected) {
-      // Agregar al final si no existe
-      updatedOrder = selectionOrder.includes(degree) 
-        ? selectionOrder 
-        : [...selectionOrder, degree];
-    } else {
-      // Remover del array
-      updatedOrder = selectionOrder.filter(d => d !== degree);
-    }
-    setSelectionOrder(updatedOrder);
-    
-    // Persistir en localStorage
-    localStorage.setItem('selectedDegrees', JSON.stringify(updatedDegrees));
-    localStorage.setItem('selectionOrder', JSON.stringify(updatedOrder));
+  const addScale = (scale: Scale) => {
+    const updated = [...selectedScales, scale];
+    setSelectedScales(updated);
+    localStorage.setItem('selectedScales', JSON.stringify(updated));
+  };
+
+  const removeScaleAt = (index: number) => {
+    const updated = selectedScales.filter((_, i) => i !== index);
+    setSelectedScales(updated);
+    localStorage.setItem('selectedScales', JSON.stringify(updated));
   };
 
   const reset = () => {
-    setSelectedDegrees({});
-    setSelectionOrder([]);
-    localStorage.removeItem('selectedDegrees');
-    localStorage.removeItem('selectionOrder');
+    setSelectedScales([]);
+    localStorage.removeItem('selectedScales');
   };
 
   // Cargar estado desde localStorage al inicializar
   React.useEffect(() => {
     try {
-      const saved = localStorage.getItem('selectedDegrees');
+      const saved = localStorage.getItem('selectedScales');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (parsed && typeof parsed === 'object') {
-          setSelectedDegrees(parsed);
-        }
-      }
-      
-      const savedOrder = localStorage.getItem('selectionOrder');
-      if (savedOrder) {
-        const parsedOrder = JSON.parse(savedOrder);
-        if (Array.isArray(parsedOrder)) {
-          setSelectionOrder(parsedOrder);
+        if (Array.isArray(parsed)) {
+          setSelectedScales(parsed);
         }
       }
     } catch (error) {
       console.error('Error loading from localStorage:', error);
-      localStorage.removeItem('selectedDegrees');
-      localStorage.removeItem('selectionOrder');
+      localStorage.removeItem('selectedScales');
     }
   }, []);
 
   const value: ScaleSelectionState = {
     currentNote,
     scales,
-    selectedDegrees,
-    selectionOrder,
+    selectedScales,
     setCurrentNote,
     setScales,
-    setSelectedDegrees,
-    setSelectionOrder,
-    toggleDegreeSelection,
+    setSelectedScales,
+    addScale,
+    removeScaleAt,
     reset
   };
 

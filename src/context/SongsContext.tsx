@@ -1,19 +1,21 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { CloudSyncService } from '../services/CloudSyncService';
+import { Scale } from '../models/Scale';
 
 export interface SavedSong {
   id: string;
   name: string;
   chords: string[];
   degrees: string[];
+  scales: Scale[]; // Agregar escalas completas
   key: string;
   createdAt: number;
 }
 
 interface SongsState {
   songs: SavedSong[];
-  saveSong: (name: string, chords: string[], degrees: string[], key: string) => void;
+  saveSong: (name: string, chords: string[], degrees: string[], scales: Scale[], key: string) => void;
   deleteSong: (id: string) => void;
   getSong: (id: string) => SavedSong | undefined;
   syncWithCloud: () => Promise<void>;
@@ -72,12 +74,13 @@ export const SongsProvider: React.FC<SongsProviderProps> = ({ children }) => {
     }
   };
 
-  const saveSong = async (name: string, chords: string[], degrees: string[], key: string) => {
+  const saveSong = async (name: string, chords: string[], degrees: string[], scales: Scale[], key: string) => {
     const newSong: SavedSong = {
       id: Date.now().toString(),
       name,
       chords,
       degrees,
+      scales,
       key,
       createdAt: Date.now()
     };
