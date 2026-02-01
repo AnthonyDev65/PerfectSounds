@@ -9,6 +9,7 @@ import MainPage from './pages/MainPage';
 import ScalesPage from './pages/ScalesPage';
 import SongsPage from './pages/SongsPage';
 import AdvancedPage from './pages/AdvancedPage';
+import TunerPage from './pages/TunerPage';
 import NavBar from './components/NavBar';
 import './App.css';
 
@@ -26,6 +27,7 @@ function App() {
                     <Route path="/scales/:note" element={<ScalesPage />} />
                     <Route path="/songs" element={<SongsPage />} />
                     <Route path="/advanced" element={<AdvancedPage />} />
+                    <Route path="/tuner" element={<TunerPage />} />
                   </Routes>
                   <NavBar />
                 </div>

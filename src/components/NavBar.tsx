@@ -6,6 +6,7 @@ import HomeIcon from './icons/HomeIcon';
 import MusicNoteIcon from './icons/MusicNoteIcon';
 import AdvancedIcon from './icons/AdvancedIcon';
 import FolderMusicIcon from './icons/FolderMusicIcon';
+import TunerIcon from './icons/TunerIcon';
 import './NavBar.css';
 
 const NavBar: React.FC = () => {
@@ -67,6 +68,14 @@ const NavBar: React.FC = () => {
       >
         <FolderMusicIcon className="nav-icon" />
         <span className="nav-text">Canciones</span>
+      </button>
+
+      <button 
+        className={`nav-item ${isActive('/tuner') ? 'active' : ''}`}
+        onClick={() => handleNavClick('/tuner')}
+      >
+        <TunerIcon className="nav-icon" size={22} />
+        <span className="nav-text">Afinador</span>
       </button>
 
       <div className="nav-spacer" />

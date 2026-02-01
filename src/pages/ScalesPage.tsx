@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useScaleSelection } from '../context/ScaleSelectionContext';
 import { useFavorites } from '../context/FavoritesContext';
@@ -25,6 +25,7 @@ const ScalesPage: React.FC = () => {
     scales, 
     setScales, 
     selectedScales,
+    setSelectedScales,
     addScale,
     removeScaleAt,
     reset
@@ -37,18 +38,28 @@ const ScalesPage: React.FC = () => {
   const [gridSpan, setGridSpan] = useState(1);
   const [showMetronome, setShowMetronome] = useState(false);
   const [showSongsModal, setShowSongsModal] = useState(false);
-
-  const loadScales = useCallback((noteKey: string) => {
-    setCurrentNote(noteKey);
-    const loadedScales = MusicService.loadScales(noteKey);
-    setScales(loadedScales);
-  }, [setCurrentNote, setScales]);
+  const previousNoteRef = useRef<string>('');
 
   useEffect(() => {
     if (note) {
-      loadScales(note);
+      // Decodificar la nota de la URL
+      const decodedNote = decodeURIComponent(note);
+      
+      // Cargar las escalas de la nueva tonalidad
+      const loadedScales = MusicService.loadScales(decodedNote);
+      setScales(loadedScales);
+      
+      // Si hay una nota anterior diferente y hay escalas seleccionadas, transponer
+      if (previousNoteRef.current && previousNoteRef.current !== decodedNote && selectedScales.length > 0) {
+        const transposedScales = MusicService.transposeScales(selectedScales, previousNoteRef.current, decodedNote);
+        setSelectedScales(transposedScales);
+      }
+      
+      // Actualizar la nota actual y la referencia
+      setCurrentNote(decodedNote);
+      previousNoteRef.current = decodedNote;
     }
-  }, [note, loadScales]);
+  }, [note, setCurrentNote, setScales, setSelectedScales, selectedScales]);
 
   const handleIslandClick = () => {
     if (isSubMenuVisible) {
@@ -69,8 +80,9 @@ const ScalesPage: React.FC = () => {
   const handleNoteOptionTapped = (option: NoteOption) => {
     setIsOverlayVisible(false);
     setIsSubMenuVisible(false);
-    loadScales(option.display);
-    navigate(`/scales/${option.display}`, { replace: true });
+    // Codificar la nota para manejar # correctamente
+    const encodedNote = encodeURIComponent(option.display);
+    navigate(`/scales/${encodedNote}`, { replace: true });
   };
 
   const handleScaleClick = (scale: Scale) => {

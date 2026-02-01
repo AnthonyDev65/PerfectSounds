@@ -318,4 +318,24 @@ export class MusicService {
   static getAllKeys(): string[] {
     return Object.keys(this.scaleData);
   }
+
+  // Transponer una escala completa de una tonalidad a otra
+  static transposeScale(scale: Scale, fromKey: string, toKey: string): Scale {
+    const fromScales = this.loadScales(fromKey);
+    const toScales = this.loadScales(toKey);
+    
+    // Encontrar el índice del grado en la tonalidad original
+    const degreeIndex = fromScales.findIndex(s => s.degrees === scale.degrees);
+    
+    // Si no se encuentra, devolver la escala original
+    if (degreeIndex === -1) return scale;
+    
+    // Devolver la escala correspondiente en la nueva tonalidad
+    return { ...toScales[degreeIndex] };
+  }
+
+  // Transponer una lista de escalas
+  static transposeScales(scales: Scale[], fromKey: string, toKey: string): Scale[] {
+    return scales.map(scale => this.transposeScale(scale, fromKey, toKey));
+  }
 }
