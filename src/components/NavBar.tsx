@@ -58,17 +58,22 @@ const NavBar: React.FC = () => {
         className={`nav-item ${isActive('/advanced') ? 'active' : ''}`}
         onClick={() => handleNavClick('/advanced')}
       >
-        <AdvancedIcon className="nav-icon" />
-        <span className="nav-text">Acordes</span>
+        <FolderMusicIcon className="nav-icon" />
+        <span className="nav-text">Canciones</span>
       </button>
 
-      <button 
+
+{/*
+      <button
         className={`nav-item ${isActive('/songs') ? 'active' : ''}`}
         onClick={() => handleNavClick('/songs')}
       >
         <FolderMusicIcon className="nav-icon" />
         <span className="nav-text">Canciones</span>
       </button>
+*/
+}
+
 
       <button 
         className={`nav-item ${isActive('/tuner') ? 'active' : ''}`}
