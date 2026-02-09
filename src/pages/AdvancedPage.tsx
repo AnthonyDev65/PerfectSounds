@@ -37,7 +37,7 @@ const AdvancedPage: React.FC = () => {
   return (
     <div className="advanced-page">
       <div className="advanced-header">
-        <h1>Acordes</h1>
+        <h1>Canciones</h1>
         <p>Crea canciones con secciones personalizadas</p>
       </div>
 
