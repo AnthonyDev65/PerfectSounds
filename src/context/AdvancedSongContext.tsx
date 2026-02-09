@@ -87,7 +87,11 @@ export const AdvancedSongProvider: React.FC<{ children: ReactNode }> = ({ childr
       return;
     }
 
-    const currentSection = currentSong.sections[currentSectionIndex];
+    // Filtrar secciones visibles (no ocultas)
+    const visibleSections = currentSong.sections;
+    
+    // Encontrar la sección actual considerando solo las visibles
+    const currentSection = visibleSections[currentSectionIndex];
     if (!currentSection || currentSection.chords.length === 0) {
       setIsPlaying(false);
       return;
@@ -118,7 +122,7 @@ export const AdvancedSongProvider: React.FC<{ children: ReactNode }> = ({ childr
           setCurrentChordIndex(0);
         } else {
           // Avanzar a la siguiente sección
-          if (currentSectionIndex < currentSong.sections.length - 1) {
+          if (currentSectionIndex < visibleSections.length - 1) {
             setCurrentSectionIndex(prev => prev + 1);
             setCurrentChordIndex(0);
             setCurrentRepeat(1);
@@ -180,6 +184,7 @@ export const AdvancedSongProvider: React.FC<{ children: ReactNode }> = ({ childr
       name,
       key,
       bpm,
+      capo: 0,
       sections: [],
       createdAt: Date.now(),
       updatedAt: Date.now()

@@ -4,6 +4,8 @@ export interface ChordItem {
   degrees: string;     // Grado (I, II, etc.)
   degreesColor: string;
   beats: number;       // Tiempos que dura este acorde (default 4)
+  bassNote?: string;   // Nota del bajo opcional para slash chords (C/F, G/B, etc.)
+  extension?: string;  // Extensión del acorde (7, maj7, 9, sus2, sus4, add9, etc.)
 }
 
 export interface SongSection {
@@ -19,6 +21,7 @@ export interface AdvancedSong {
   name: string;
   key: string;         // Tonalidad principal
   bpm: number;
+  capo?: number;       // Traste donde va el capo (0 = sin capo)
   sections: SongSection[];
   createdAt: number;
   updatedAt: number;

@@ -172,7 +172,8 @@
 }
 
 .key-badge,
-.bpm-badge {
+.bpm-badge,
+.capo-badge {
   padding: 2px 8px;
   border-radius: 6px;
   font-family: 'Montserrat', sans-serif;
@@ -190,13 +191,26 @@
   color: #B579D3;
 }
 
-.bpm-badge.clickable {
+.capo-badge {
+  background-color: rgba(121, 180, 211, 0.2);
+  color: #79B4D3;
+}
+
+.bpm-badge.clickable,
+.capo-badge.clickable {
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 4px;
   transition: all 0.2s;
+}
+
+.bpm-badge.clickable {
   border: 1px solid rgba(181, 121, 211, 0.3);
+}
+
+.capo-badge.clickable {
+  border: 1px solid rgba(121, 180, 211, 0.3);
 }
 
 .bpm-badge.clickable:hover {
@@ -204,7 +218,13 @@
   transform: scale(1.05);
 }
 
-.bpm-badge.clickable i {
+.capo-badge.clickable:hover {
+  background-color: rgba(121, 180, 211, 0.3);
+  transform: scale(1.05);
+}
+
+.bpm-badge.clickable i,
+.capo-badge.clickable i {
   font-size: 14px;
 }
 
@@ -550,6 +570,9 @@
   cursor: grab;
   transition: all 0.2s;
   touch-action: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .chord-item:active {
@@ -593,6 +616,7 @@
   color: white;
   text-align: center;
   margin-bottom: 4px;
+  word-break: break-word;
 }
 
 .chord-degree {
@@ -601,6 +625,54 @@
   font-weight: 600;
   text-align: center;
   margin-bottom: 8px;
+}
+
+.chord-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.bass-note-btn {
+  width: 24px;
+  height: 24px;
+  background-color: rgba(121, 180, 211, 0.2);
+  border: 1px solid rgba(121, 180, 211, 0.3);
+  border-radius: 6px;
+  color: #79B4D3;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.bass-note-btn:hover {
+  background-color: rgba(121, 180, 211, 0.3);
+  border-color: #79B4D3;
+}
+
+.remove-bass-btn {
+  width: 24px;
+  height: 24px;
+  background-color: rgba(235, 126, 122, 0.2);
+  border: 1px solid rgba(235, 126, 122, 0.3);
+  border-radius: 6px;
+  color: #EB7E7A;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.remove-bass-btn:hover {
+  background-color: rgba(235, 126, 122, 0.3);
+  border-color: #EB7E7A;
 }
 
 .chord-beats {
@@ -1310,4 +1382,166 @@
 
 .section-visibility-item.hidden i {
   color: #888;
+}
+
+/* Bass Note Picker Modal */
+.bass-note-picker-modal {
+  max-width: 500px;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.modal-description {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  color: #888;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.chord-extensions-section,
+.bass-notes-section {
+  margin-bottom: 24px;
+}
+
+.chord-extensions-section h3,
+.bass-notes-section h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #9DD982;
+  margin: 0 0 12px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.chord-extensions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.extension-option {
+  padding: 14px 8px;
+  background-color: #3A3A4A;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  color: white;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.extension-option:hover {
+  background-color: #4A4A5A;
+  border-color: #9DD982;
+  transform: scale(1.05);
+}
+
+.bass-notes-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+
+.bass-note-option {
+  padding: 12px 8px;
+  background-color: #3A3A4A;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  color: white;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.bass-note-option:hover {
+  background-color: #4A4A5A;
+  border-color: #79B4D3;
+  transform: scale(1.05);
+}
+
+@media (max-width: 480px) {
+  .chord-extensions-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  
+  .bass-notes-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  
+  .extension-option,
+  .bass-note-option {
+    padding: 10px 6px;
+    font-size: 13px;
+  }
+  
+  .bass-note-picker-modal {
+    max-height: 80vh;
+  }
+}
+
+/* Capo Selector Modal */
+.capo-selector-modal {
+  max-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.capo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.capo-option {
+  padding: 14px 12px;
+  background-color: #3A3A4A;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  color: white;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.capo-option:hover {
+  background-color: #4A4A5A;
+  border-color: #79B4D3;
+  transform: scale(1.05);
+}
+
+.capo-option.current {
+  background-color: rgba(121, 180, 211, 0.2);
+  border-color: #79B4D3;
+  color: #79B4D3;
+}
+
+@media (max-width: 480px) {
+  .capo-grid {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 8px;
+  }
+  
+  .capo-option {
+    padding: 12px 10px;
+    font-size: 13px;
+  }
+  
+  .capo-selector-modal {
+    max-height: 70vh;
+  }
 }

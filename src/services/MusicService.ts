@@ -338,4 +338,38 @@ export class MusicService {
   static transposeScales(scales: Scale[], fromKey: string, toKey: string): Scale[] {
     return scales.map(scale => this.transposeScale(scale, fromKey, toKey));
   }
+
+  // Transponer una nota individual (para bajos en slash chords)
+  static transposeNote(note: string, fromKey: string, toKey: string): string {
+    const allNotes = this.getAllNotes();
+    const fromScales = this.loadScales(fromKey);
+    const toScales = this.loadScales(toKey);
+    
+    // Encontrar la nota en la escala original
+    const noteIndex = fromScales.findIndex(scale => {
+      // Extraer la nota base del acorde (sin 'm', 'dim', etc.)
+      const baseNote = scale.name.replace(/m|dim|aug|sus|maj|add|[0-9]/g, '');
+      return baseNote === note;
+    });
+    
+    // Si se encuentra en la escala, transponer usando el mismo grado
+    if (noteIndex !== -1) {
+      const transposedChord = toScales[noteIndex].name;
+      return transposedChord.replace(/m|dim|aug|sus|maj|add|[0-9]/g, '');
+    }
+    
+    // Si no está en la escala, transponer cromáticamente
+    const noteIdx = allNotes.indexOf(note);
+    if (noteIdx === -1) return note;
+    
+    const fromKeyIdx = allNotes.indexOf(fromKey.replace(/m$/, ''));
+    const toKeyIdx = allNotes.indexOf(toKey.replace(/m$/, ''));
+    
+    if (fromKeyIdx === -1 || toKeyIdx === -1) return note;
+    
+    const interval = (toKeyIdx - fromKeyIdx + 12) % 12;
+    const newNoteIdx = (noteIdx + interval) % 12;
+    
+    return allNotes[newNoteIdx];
+  }
 }

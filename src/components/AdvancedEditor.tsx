@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAdvancedSong } from '../context/AdvancedSongContext';
 import { MusicService } from '../services/MusicService';
-import { SECTION_PRESETS, SongSection } from '../models/AdvancedSong';
+import { SECTION_PRESETS, SongSection, ChordItem } from '../models/AdvancedSong';
 import './AdvancedEditor.css';
 
 const AdvancedEditor: React.FC = () => {
@@ -26,11 +26,13 @@ const AdvancedEditor: React.FC = () => {
 
   const [showSectionModal, setShowSectionModal] = useState(false);
   const [showChordPicker, setShowChordPicker] = useState<string | null>(null);
+  const [showBassNotePicker, setShowBassNotePicker] = useState<{ sectionId: string; chordId: string; chordName: string } | null>(null);
   const [draggedChord, setDraggedChord] = useState<{ sectionId: string; index: number } | null>(null);
   const [newSectionName, setNewSectionName] = useState('');
   const [selectedPreset, setSelectedPreset] = useState(SECTION_PRESETS[0]);
   const [showKeySelector, setShowKeySelector] = useState(false);
   const [showBpmEditor, setShowBpmEditor] = useState(false);
+  const [showCapoSelector, setShowCapoSelector] = useState(false);
   const [tempBpm, setTempBpm] = useState(currentSong?.bpm || 120);
   const [visualizerMode, setVisualizerMode] = useState(false);
   const [chordsPerRow, setChordsPerRow] = useState(4);
@@ -51,6 +53,11 @@ const AdvancedEditor: React.FC = () => {
   const handleSaveBpm = () => {
     updateSong({ ...currentSong, bpm: tempBpm });
     setShowBpmEditor(false);
+  };
+
+  const handleCapoChange = (capo: number) => {
+    updateSong({ ...currentSong, capo });
+    setShowCapoSelector(false);
   };
 
   const handleVisualizerButtonPress = () => {
@@ -101,7 +108,10 @@ const AdvancedEditor: React.FC = () => {
       ...section,
       chords: section.chords.map(chord => ({
         ...chord,
-        name: MusicService.transposeChord(chord.name, currentSong.key, newKey)
+        name: MusicService.transposeChord(chord.name, currentSong.key, newKey),
+        bassNote: chord.bassNote 
+          ? MusicService.transposeNote(chord.bassNote, currentSong.key, newKey)
+          : undefined
       }))
     }));
 
@@ -139,9 +149,47 @@ const AdvancedEditor: React.FC = () => {
       name: scale.name,
       degrees: scale.degrees,
       degreesColor: scale.degreesColor,
-      beats: 4
+      beats: 4,
+      bassNote: undefined,
+      extension: undefined
     });
     setShowChordPicker(null);
+  };
+
+  const handleAddBassNote = (bassNote: string) => {
+    if (!showBassNotePicker) return;
+    updateChordInSection(showBassNotePicker.sectionId, showBassNotePicker.chordId, { bassNote });
+    setShowBassNotePicker(null);
+  };
+
+  const handleAddChordExtension = (extension: string) => {
+    if (!showBassNotePicker) return;
+    updateChordInSection(showBassNotePicker.sectionId, showBassNotePicker.chordId, { extension });
+    setShowBassNotePicker(null);
+  };
+
+  const handleRemoveBassNote = (sectionId: string, chordId: string) => {
+    updateChordInSection(sectionId, chordId, { bassNote: undefined });
+  };
+
+  const handleRemoveExtension = (sectionId: string, chordId: string) => {
+    updateChordInSection(sectionId, chordId, { extension: undefined });
+  };
+
+  const getChordDisplayName = (chord: ChordItem): string => {
+    let displayName = chord.name;
+    
+    // Agregar extensión si existe
+    if (chord.extension) {
+      displayName += chord.extension;
+    }
+    
+    // Agregar bajo si existe
+    if (chord.bassNote) {
+      displayName += `/${chord.bassNote}`;
+    }
+    
+    return displayName;
   };
 
   const handleChordBeatsChange = (sectionId: string, chordId: string, beats: number) => {
@@ -247,6 +295,14 @@ const AdvancedEditor: React.FC = () => {
               {currentSong.bpm} BPM
               <i className="ri-arrow-down-s-line"></i>
             </button>
+            <button 
+              className="capo-badge clickable"
+              onClick={() => setShowCapoSelector(true)}
+              title="Cambiar capo"
+            >
+              Capo: {currentSong.capo || 0}
+              <i className="ri-arrow-down-s-line"></i>
+            </button>
           </div>
         </div>
         <div className="playback-controls">
@@ -309,7 +365,7 @@ const AdvancedEditor: React.FC = () => {
                           key={chord.id}
                           className={`visualizer-chord ${isPlaying && currentSectionIndex === actualSectionIdx && currentChordIndex === chordIdx ? 'playing' : ''}`}
                         >
-                          <div className="visualizer-chord-name">{chord.name}</div>
+                          <div className="visualizer-chord-name">{getChordDisplayName(chord)}</div>
                           <div 
                             className="visualizer-chord-degree"
                             style={{ color: chord.degreesColor }}
@@ -397,12 +453,33 @@ const AdvancedEditor: React.FC = () => {
                     onDrop={() => handleDrop(section.id, chordIdx)}
                     onTouchStart={() => handleTouchStart(section.id, chordIdx)}
                   >
-                    <div className="chord-name">{chord.name}</div>
+                    <div className="chord-name">{getChordDisplayName(chord)}</div>
                     <div 
                       className="chord-degree"
                       style={{ color: chord.degreesColor }}
                     >
                       {chord.degrees}
+                    </div>
+                    <div className="chord-actions">
+                      <button 
+                        className="bass-note-btn"
+                        onClick={() => setShowBassNotePicker({ sectionId: section.id, chordId: chord.id, chordName: chord.name })}
+                        title={chord.bassNote || chord.extension ? "Modificar acorde" : "Agregar extensión o bajo"}
+                      >
+                        <i className={chord.bassNote || chord.extension ? "ri-music-fill" : "ri-music-line"}></i>
+                      </button>
+                      {(chord.bassNote || chord.extension) && (
+                        <button 
+                          className="remove-bass-btn"
+                          onClick={() => {
+                            if (chord.extension) handleRemoveExtension(section.id, chord.id);
+                            if (chord.bassNote) handleRemoveBassNote(section.id, chord.id);
+                          }}
+                          title="Quitar modificaciones"
+                        >
+                          <i className="ri-subtract-line"></i>
+                        </button>
+                      )}
                     </div>
                     <div className="chord-beats">
                       <button 
@@ -595,6 +672,111 @@ const AdvancedEditor: React.FC = () => {
               </button>
               <button className="btn-create" onClick={handleSaveBpm}>
                 Guardar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Capo Selector Modal */}
+      {showCapoSelector && (
+        <div className="modal-backdrop" onClick={() => setShowCapoSelector(false)}>
+          <div className="modal-content capo-selector-modal" onClick={e => e.stopPropagation()}>
+            <h2>Seleccionar Capo</h2>
+            <p className="modal-description">
+              Elige el traste donde colocar el capo
+            </p>
+            
+            <div className="capo-grid">
+              {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(capo => (
+                <button
+                  key={capo}
+                  className={`capo-option ${(currentSong.capo || 0) === capo ? 'current' : ''}`}
+                  onClick={() => handleCapoChange(capo)}
+                >
+                  {capo === 0 ? 'Sin capo' : `Traste ${capo}`}
+                </button>
+              ))}
+            </div>
+
+            <div className="modal-actions">
+              <button className="btn-cancel" onClick={() => setShowCapoSelector(false)}>
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Bass Note Picker Modal */}
+      {showBassNotePicker && (
+        <div className="modal-backdrop" onClick={() => setShowBassNotePicker(null)}>
+          <div className="modal-content bass-note-picker-modal" onClick={e => e.stopPropagation()}>
+            <h2>Modificar Acorde: {showBassNotePicker.chordName}</h2>
+            <p className="modal-description">
+              Agrega extensiones o elige una nota de bajo
+            </p>
+            
+            <div className="chord-extensions-section">
+              <h3>Extensiones</h3>
+              <div className="chord-extensions-grid">
+                <button
+                  className="extension-option"
+                  onClick={() => handleAddChordExtension('7')}
+                >
+                  7
+                </button>
+                <button
+                  className="extension-option"
+                  onClick={() => handleAddChordExtension('maj7')}
+                >
+                  maj7
+                </button>
+                <button
+                  className="extension-option"
+                  onClick={() => handleAddChordExtension('9')}
+                >
+                  9
+                </button>
+                <button
+                  className="extension-option"
+                  onClick={() => handleAddChordExtension('sus2')}
+                >
+                  sus2
+                </button>
+                <button
+                  className="extension-option"
+                  onClick={() => handleAddChordExtension('sus4')}
+                >
+                  sus4
+                </button>
+                <button
+                  className="extension-option"
+                  onClick={() => handleAddChordExtension('add9')}
+                >
+                  add9
+                </button>
+              </div>
+            </div>
+
+            <div className="bass-notes-section">
+              <h3>Bajo (Slash Chord)</h3>
+              <div className="bass-notes-grid">
+                {MusicService.getAllNotes().map(note => (
+                  <button
+                    key={note}
+                    className="bass-note-option"
+                    onClick={() => handleAddBassNote(note)}
+                  >
+                    {note}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="modal-actions">
+              <button className="btn-cancel" onClick={() => setShowBassNotePicker(null)}>
+                Cancelar
               </button>
             </div>
           </div>
